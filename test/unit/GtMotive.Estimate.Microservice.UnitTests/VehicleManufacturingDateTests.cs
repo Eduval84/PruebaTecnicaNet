@@ -8,7 +8,7 @@ namespace GtMotive.Estimate.Microservice.UnitTests;
 public class VehicleManufacturingDateTests
 {
     [Fact]
-    public void Create_ShouldThrowDomainException_WhenDateIsOlderThanFiveYears()
+    public void CreateShouldThrowDomainExceptionWhenDateIsOlderThanFiveYears()
     {
         // Arrange
         var invalidManufacturingDate = DateOnly.FromDateTime(DateTime.UtcNow.Date.AddYears(-6));
