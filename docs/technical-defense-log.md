@@ -94,7 +94,28 @@ Historial de commits:
 Cómo explicarlo:
 - "Mantuvimos el agregado intencionalmente pequeño. Solo sabe si el cliente ya tiene un alquiler activo, porque esa es la invariante que necesitamos proteger ahora mismo."
 
-### 3. Limpieza del entorno
+### 3. Devolución del vehículo
+
+Regla de negocio:
+- Cuando el cliente devuelve el vehículo, debe poder iniciar un nuevo alquiler.
+
+Decisión de dominio:
+- Añadir `EndRental()` al agregado `Customer`.
+- Mantener el comportamiento mínimo: cerrar el estado de alquiler activo.
+- No modelar todavía el vehículo específico devuelto, porque la necesidad actual solo exige liberar la restricción.
+
+Archivos relevantes:
+- `src/GtMotive.Estimate.Microservice.Domain/Customer.cs`
+- `test/unit/GtMotive.Estimate.Microservice.UnitTests/CustomerReturnRuleTests.cs`
+
+Historial de commits:
+- `7bdeb83` - `test(domain): add failing test for rental return behavior`
+- `9b1310f` - `feat(domain): add end rental behavior to customer aggregate`
+
+Cómo explicarlo:
+- "Primero cerré la invariante de que solo puede haber un alquiler activo y después añadí la devolución como la operación mínima para liberar ese estado. No añadí más modelo del necesario porque todavía no hace falta saber qué vehículo concreto se devuelve para cumplir esta regla."
+
+### 4. Limpieza del entorno
 
 Objetivo:
 - Mantener las ejecuciones TDD locales estables y reproducibles.
