@@ -313,7 +313,40 @@ Notas para explicar la implementación:
 - El puerto de salida sigue la forma estándar de la plantilla.
 - El dominio sigue siendo el que valida la fecha de fabricación antes de construir el vehículo.
 
-### 5. Limpieza del entorno
+### 5. Segundo caso de uso de la aplicación
+
+Caso elegido:
+- Listar vehículos disponibles.
+
+Qué mostrar:
+- `IVehicleRepository` con `ListAvailable()`.
+- `ListAvailableVehiclesInput`.
+- `ListAvailableVehiclesUseCase`.
+- `IListAvailableVehiclesOutputPort`.
+- `ListAvailableVehiclesOutput` y `ListAvailableVehiclesOutputItem`.
+
+Qué decir:
+- "Repetimos el mismo patrón de la plantilla para mantener consistencia entre casos de uso."
+- "El caso de uso se limita a orquestar: pide datos al repositorio y los proyecta al output."
+- "La API no necesita conocer la implementación del repositorio, solo el contrato del puerto."
+- "Este diseño nos prepara para implementar después infraestructura en memoria sin tocar la lógica de aplicación."
+
+Mensaje clave:
+- Coherencia de patrón: mismo contrato, diferente intención de negocio.
+
+Historial de commits:
+- `test(application): add failing test for listing available vehicles`
+- `feat(application): add list available vehicles use case using template contracts`
+
+Checklist de navegación:
+
+1. Abrir `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases/IVehicleRepository.cs`.
+2. Mostrar `ListAvailableVehiclesInput` y `ListAvailableVehiclesUseCase`.
+3. Mostrar `IListAvailableVehiclesOutputPort` y el output (`ListAvailableVehiclesOutput`).
+4. Abrir `test/unit/GtMotive.Estimate.Microservice.UnitTests/ApplicationCore/ListAvailableVehiclesUseCaseTests.cs`.
+5. Enseñar el test verde y remarcar que no dependemos todavía de infraestructura concreta.
+
+### 6. Limpieza del entorno
 
 Objetivo:
 - Mantener las ejecuciones TDD locales estables y reproducibles.
