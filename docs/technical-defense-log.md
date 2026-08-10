@@ -1,144 +1,144 @@
-# Technical Defense Log
+# Registro de defensa técnica
 
-Living document for the interview walkthrough of the renting microservice. This file is intentionally small, practical, and updated after each completed feature or relevant commit.
+Documento vivo para la entrevista de revisión del microservicio de renting. Este archivo se mantiene pequeño, práctico y se actualiza después de cada feature cerrada o commit relevante.
 
-## Purpose
+## Objetivo
 
-The goal of this implementation is to show:
+El objetivo de esta implementación es mostrar:
 
-- How the solution is organized using Hexagonal Architecture, Clean Architecture, and DDD.
-- How TDD drives each business rule from red to green.
-- Why the domain stays small and expressive instead of over-engineered.
-- How the Web API, application layer, and infrastructure layer remain decoupled.
-- How the Presenter pattern is used in the API layer to format responses.
-- How the local environment stays runnable without external dependencies.
+- Cómo se organiza la solución usando Arquitectura Hexagonal, Clean Architecture y DDD.
+- Cómo TDD guía cada regla de negocio desde rojo hasta verde.
+- Por qué el dominio se mantiene pequeño y expresivo en lugar de sobrecargado.
+- Cómo la Web API, la capa de aplicación y la infraestructura permanecen desacopladas.
+- Cómo se usa el patrón Presenter en la API para formatear respuestas.
+- Cómo el entorno local sigue siendo ejecutable sin dependencias externas.
 
-## Interview Storyline
+## Guion De Entrevista
 
-When sharing the screen, the recommended path is:
+Cuando comparta pantalla, el recorrido recomendado es:
 
-1. Start at the repository root and explain the solution structure.
-2. Move from the outside in: API -> Application -> Domain -> Infrastructure.
-3. Show the first business rule as a red test, then the minimal domain implementation.
-4. Explain how each commit corresponds to a small, verifiable step.
-5. Close by pointing out that the architecture serves the business rules, not the other way around.
+1. Empezar en la raíz del repositorio y explicar la estructura de la solución.
+2. Bajar de fuera hacia dentro: API -> Application -> Domain -> Infrastructure.
+3. Mostrar la primera regla de negocio como test rojo y después la implementación mínima en dominio.
+4. Explicar cómo cada commit corresponde a un paso pequeño y verificable.
+5. Cerrar remarcando que la arquitectura sirve a las reglas de negocio, no al revés.
 
-## Architecture Notes
+## Notas De Arquitectura
 
-### Domain
+### Dominio
 
-- Keep the business rules inside the domain model.
-- Use value objects for validation and invariants.
-- Keep aggregates small and explicit.
-- Avoid introducing factories, services, or repositories unless a rule genuinely needs them.
+- Mantener las reglas de negocio dentro del modelo de dominio.
+- Usar value objects para validaciones e invariantes.
+- Mantener los agregados pequeños y explícitos.
+- Evitar introducir factories, services o repositories si la regla no los necesita de verdad.
 
-### Application
+### Aplicación
 
-- Use cases should orchestrate, not contain business logic.
-- Commands and queries are the natural boundary for the application layer.
-- MediatR is used as the dispatch mechanism, not as the place where rules live.
+- Los casos de uso deben orquestar, no contener la lógica de negocio.
+- Commands y queries son la frontera natural de la capa de aplicación.
+- MediatR se usa como mecanismo de despacho, no como lugar donde viven las reglas.
 
-### Infrastructure
+### Infraestructura
 
-- Use SQLite or EF Core InMemory to keep the solution runnable locally.
-- Infrastructure adapts persistence and external services to the application ports.
-- No business decisions should leak into this layer.
+- Usar SQLite o EF Core InMemory para mantener la solución ejecutable en local.
+- La infraestructura adapta la persistencia y los servicios externos a los puertos de aplicación.
+- No deben filtrarse decisiones de negocio a esta capa.
 
 ### Web API
 
-- Controllers should stay thin.
-- The controller delegates response formatting to the Presenter.
-- ViewModels belong to the API boundary and should not leak domain concerns.
+- Los controladores deben ser delgados.
+- El controlador delega el formateo de respuesta en el Presenter.
+- Los ViewModels pertenecen a la frontera de API y no deben contaminar el dominio.
 
-## Completed Features
+## Features Completadas
 
-### 1. Manufacturing date validation
+### 1. Validación de fecha de fabricación
 
-Business rule:
-- A vehicle cannot be created if its manufacturing date is older than 5 years.
+Regla de negocio:
+- Un vehículo no puede crearse si su fecha de fabricación es anterior a 5 años.
 
-Domain decision:
-- Create a `ManufacturingDate` value object.
-- Validate the date in the domain boundary.
-- Throw `DomainException` when the invariant is broken.
+Decisión de dominio:
+- Crear el value object `ManufacturingDate`.
+- Validar la fecha en la frontera del dominio.
+- Lanzar `DomainException` cuando se rompe el invariante.
 
-Relevant files:
+Archivos relevantes:
 - `src/GtMotive.Estimate.Microservice.Domain/ValueObjects/ManufacturingDate.cs`
 - `test/unit/GtMotive.Estimate.Microservice.UnitTests/VehicleManufacturingDateTests.cs`
 
-Commit history:
+Historial de commits:
 - `11ae03e` - `test(domain): add failing test for manufacturing date older than five years`
 - `0967fd3` - `feat(domain): implement manufacturing date value object validation`
 
-How to explain it:
-- "I pushed the age validation into the domain because this is a pure business invariant. The test came first, then I implemented the smallest possible value object to make it pass."
+Cómo explicarlo:
+- "Llevé la validación de antigüedad al dominio porque es un invariante puro del negocio. Primero escribí el test y luego implementé el value object más pequeño posible para hacerlo pasar."
 
-### 2. Single active rental per customer
+### 2. Un alquiler activo por cliente
 
-Business rule:
-- A user cannot have more than one active rental at the same time.
+Regla de negocio:
+- Un usuario no puede tener más de un alquiler activo al mismo tiempo.
 
-Domain decision:
-- Add a minimal `Customer` aggregate.
-- Track whether the customer already has an active rental.
-- Reject a second rental by throwing `DomainException`.
+Decisión de dominio:
+- Añadir un agregado mínimo `Customer`.
+- Guardar si el cliente ya tiene un alquiler activo.
+- Rechazar un segundo alquiler lanzando `DomainException`.
 
-Relevant files:
+Archivos relevantes:
 - `src/GtMotive.Estimate.Microservice.Domain/Customer.cs`
 - `test/unit/GtMotive.Estimate.Microservice.UnitTests/CustomerRentalRuleTests.cs`
 
-Commit history:
+Historial de commits:
 - `614955b` - `test(domain): add failing test for single active rental per customer`
 - `8363f01` - `feat(domain): enforce single active rental per customer`
 
-How to explain it:
-- "I kept the aggregate intentionally small. The only thing it knows is whether the customer already has an active rental, because that is the business invariant we need to protect right now."
+Cómo explicarlo:
+- "Mantuvimos el agregado intencionalmente pequeño. Solo sabe si el cliente ya tiene un alquiler activo, porque esa es la invariante que necesitamos proteger ahora mismo."
 
-### 3. Environment cleanup
+### 3. Limpieza del entorno
 
-Purpose:
-- Keep local TDD runs stable and reproducible.
+Objetivo:
+- Mantener las ejecuciones TDD locales estables y reproducibles.
 
-Changes made:
-- Updated the SDK pin to a version installed locally.
-- Reduced noise from package auditing so the red/green cycle can continue.
-- Kept the solution runnable in the current machine without external database dependencies.
+Cambios realizados:
+- Se fijó el SDK a una versión instalada localmente.
+- Se redujo el ruido de auditoría de paquetes para que el ciclo rojo/verde pueda continuar.
+- Se mantuvo la solución ejecutable en esta máquina sin dependencias de base de datos externas.
 
-Relevant files:
+Archivos relevantes:
 - `global.json`
 - `Directory.Build.props`
 - `Directory.Build.targets`
 
-Commit history:
+Historial de commits:
 - `5336a16` - `chore(build): pin .NET SDK to 9.0.202`
 
-How to explain it:
-- "I fixed the environment only to remove friction from the TDD loop. The goal is to keep the focus on business behavior, not build tooling problems."
+Cómo explicarlo:
+- "Solo corregí el entorno para eliminar fricción del ciclo TDD. El objetivo es mantener el foco en el comportamiento de negocio, no en problemas de tooling."
 
-## Current Rule Status
+## Estado Actual De Reglas
 
-- Vehicle manufacturing date max age: implemented and green.
-- One active rental per customer: implemented and green.
-- Vehicle creation/listing/rental/return use cases: next.
+- Fecha máxima de fabricación del vehículo: implementada y en verde.
+- Un alquiler activo por cliente: implementada y en verde.
+- Casos de uso de crear/listar/alquilar/devolver vehículo: siguiente paso.
 
-## Follow-up Log
+## Registro De Seguimiento
 
-Use this section to append each new commit/feature as we continue.
+Usar esta sección para ir añadiendo cada commit/feature a medida que avancemos.
 
-Format:
+Formato:
 
-- Commit: `hash` - `type(scope): message`
-- Rule or feature:
-- Why it was implemented that way:
-- Files touched:
-- How to explain it in the interview:
+- Commit: `hash` - `type(scope): mensaje`
+- Regla o feature:
+- Por qué se implementó así:
+- Archivos tocados:
+- Cómo explicarlo en la entrevista:
 
-## Demo Notes
+## Notas De Demo
 
-Useful phrases for the interview:
+Frases útiles para la entrevista:
 
-- "I start with the test because I want the domain rule to be explicit before I write the implementation."
-- "The domain is the center of gravity; the other layers just adapt to it."
-- "I avoid over-engineering by only introducing patterns when the business rule needs them."
-- "The Presenter keeps response formatting out of the controller, which preserves separation of concerns."
-- "The local database choice is intentional so the evaluator can run the project without extra setup."
+- "Empiezo por el test porque quiero que la regla de dominio quede explícita antes de escribir la implementación."
+- "El dominio es el centro de gravedad; las demás capas solo se adaptan a él."
+- "Evito el sobre-ingeniería introduciendo patrones solo cuando la regla de negocio los necesita."
+- "El Presenter mantiene el formateo de respuesta fuera del controlador, lo que preserva la separación de responsabilidades."
+- "La elección de base de datos local es intencional para que el evaluador pueda ejecutar el proyecto sin preparación extra."
