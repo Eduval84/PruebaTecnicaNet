@@ -268,7 +268,52 @@ Historial de commits:
 Cómo explicarlo:
 - "Primero cerré la invariante de que solo puede haber un alquiler activo y después añadí la devolución como la operación mínima para liberar ese estado. No añadí más modelo del necesario porque todavía no hace falta saber qué vehículo concreto se devuelve para cumplir esta regla."
 
-### 4. Limpieza del entorno
+### 4. Primer caso de uso de la aplicación
+
+Caso elegido:
+- Crear vehículo.
+
+Qué mostrar:
+- `ApplicationCore/UseCases`.
+- `CreateVehicleInput`.
+- `CreateVehicleUseCase`.
+- `ICreateVehicleOutputPort`.
+- `IUseCase<TInput>` como contrato base de la plantilla.
+
+Qué decir:
+- "Ahora ya no estoy validando solo una regla de dominio aislada, sino el flujo que orquesta la aplicación."
+- "Sigo usando las interfaces de la plantilla: el caso de uso implementa `IUseCase<TInput>` y el resultado sale por un puerto estándar."
+- "MediatR aquí solo actúa como despachador del mensaje; la lógica sigue viviendo en el caso de uso y en el dominio."
+- "El controlador no conoce la implementación concreta del flujo, solo el mensaje que envía y el presenter que devuelve la respuesta."
+
+Mensaje clave:
+- La capa de aplicación orquesta la intención del usuario y delega la regla al dominio.
+
+Historial de commits:
+- `ef8a7bd` - `feat(application): add create vehicle use case using template contracts`
+
+Cómo explicarlo:
+- "Aquí ya estoy usando la plantilla real de la capa de aplicación: el caso de uso implementa `IUseCase<TInput>`, el input implementa `IUseCaseInput` y el resultado sale por un puerto estándar."
+- "MediatR no decide la lógica; solo entrega el mensaje al handler adecuado."
+- "El dominio sigue validando las reglas y la aplicación orquesta el flujo."
+
+Checklist de navegación:
+
+1. Abrir `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases`.
+2. Mostrar `IUseCase<TInput>`, `IUseCaseInput` e `IOutputPortStandard<TOutput>`.
+3. Abrir `CreateVehicleInput` y `CreateVehicleUseCase`.
+4. Abrir `ICreateVehicleOutputPort` y explicar su relación con el Presenter de la API.
+5. Señalar `MediatR` en `ApiConfiguration` como mecanismo de despacho, no como lugar de negocio.
+
+Notas para explicar la implementación:
+
+- El input implementa `IUseCaseInput`.
+- El caso de uso implementa `IUseCase<CreateVehicleInput>`.
+- El output implementa `IUseCaseOutput`.
+- El puerto de salida sigue la forma estándar de la plantilla.
+- El dominio sigue siendo el que valida la fecha de fabricación antes de construir el vehículo.
+
+### 5. Limpieza del entorno
 
 Objetivo:
 - Mantener las ejecuciones TDD locales estables y reproducibles.
