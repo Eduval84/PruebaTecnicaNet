@@ -43,7 +43,7 @@ Checklist de navegación:
 
 1. Abrir `README.md` para situar la arquitectura general.
 2. Abrir `src/GtMotive.Estimate.Microservice.Domain` para mostrar dónde vive la regla.
-3. Abrir `test/unit/GtMotive.Estimate.Microservice.UnitTests/VehicleManufacturingDateTests.cs`.
+3. Abrir `test/unit/GtMotive.Estimate.Microservice.UnitTests/Domain/VehicleManufacturingDateTests.cs`.
 4. Abrir `src/GtMotive.Estimate.Microservice.Domain/ValueObjects/ManufacturingDate.cs`.
 5. Mostrar el historial de commits con `git log --oneline -n 5`.
 6. Cerrar enseñando el documento `docs/technical-defense-log.md` como resumen de la narrativa.
@@ -64,7 +64,7 @@ Mensaje clave:
 
 Checklist de navegación:
 
-1. Abrir `test/unit/GtMotive.Estimate.Microservice.UnitTests/CustomerRentalRuleTests.cs`.
+1. Abrir `test/unit/GtMotive.Estimate.Microservice.UnitTests/Domain/CustomerRentalRuleTests.cs`.
 2. Abrir `src/GtMotive.Estimate.Microservice.Domain/Customer.cs`.
 3. Señalar que el estado mínimo del agregado es suficiente para proteger la regla.
 4. Mostrar el test verde y el commit asociado.
@@ -85,7 +85,7 @@ Mensaje clave:
 
 Checklist de navegación:
 
-1. Abrir `test/unit/GtMotive.Estimate.Microservice.UnitTests/CustomerReturnRuleTests.cs`.
+1. Abrir `test/unit/GtMotive.Estimate.Microservice.UnitTests/Domain/CustomerReturnRuleTests.cs`.
 2. Abrir `src/GtMotive.Estimate.Microservice.Domain/Customer.cs`.
 3. Mostrar el método `EndRental()` y explicar que solo libera el estado.
 4. Enseñar que el test pasa sin añadir todavía más complejidad al modelo.
@@ -207,7 +207,7 @@ Decisión de dominio:
 
 Archivos relevantes:
 - `src/GtMotive.Estimate.Microservice.Domain/ValueObjects/ManufacturingDate.cs`
-- `test/unit/GtMotive.Estimate.Microservice.UnitTests/VehicleManufacturingDateTests.cs`
+- `test/unit/GtMotive.Estimate.Microservice.UnitTests/Domain/VehicleManufacturingDateTests.cs`
 
 Historial de commits:
 - `11ae03e` - `test(domain): add failing test for manufacturing date older than five years`
@@ -238,7 +238,7 @@ Decisión de dominio:
 
 Archivos relevantes:
 - `src/GtMotive.Estimate.Microservice.Domain/Customer.cs`
-- `test/unit/GtMotive.Estimate.Microservice.UnitTests/CustomerRentalRuleTests.cs`
+- `test/unit/GtMotive.Estimate.Microservice.UnitTests/Domain/CustomerRentalRuleTests.cs`
 
 Historial de commits:
 - `614955b` - `test(domain): add failing test for single active rental per customer`
@@ -259,7 +259,7 @@ Decisión de dominio:
 
 Archivos relevantes:
 - `src/GtMotive.Estimate.Microservice.Domain/Customer.cs`
-- `test/unit/GtMotive.Estimate.Microservice.UnitTests/CustomerReturnRuleTests.cs`
+- `test/unit/GtMotive.Estimate.Microservice.UnitTests/Domain/CustomerReturnRuleTests.cs`
 
 Historial de commits:
 - `7bdeb83` - `test(domain): add failing test for rental return behavior`
