@@ -120,6 +120,7 @@ Qué mostrar:
 Qué decir:
 - "Con el dominio ya probado, el siguiente paso lógico es movernos a la capa de aplicación."
 - "Ahí empezamos a introducir comandos, handlers, puertos y el patrón Presenter."
+- "MediatR me ayuda a despachar el comando al handler correcto, pero no contiene la lógica de negocio; esa sigue en dominio y aplicación."
 - "De esa forma mantenemos el dominio limpio y dejamos que la aplicación orqueste los casos de uso."
 
 Mensaje clave:
@@ -170,6 +171,15 @@ Guion práctico en pantalla:
 - Los casos de uso deben orquestar, no contener la lógica de negocio.
 - Commands y queries son la frontera natural de la capa de aplicación.
 - MediatR se usa como mecanismo de despacho, no como lugar donde viven las reglas.
+- MediatR recibe el mensaje, lo enruta al handler y mantiene el controlador desacoplado de la implementación concreta.
+- La capa de aplicación traduce la intención del usuario en acciones del dominio y delega la persistencia o integración en puertos.
+
+Recordatorio rápido sobre MediatR:
+
+- Recibe un mensaje y lo entrega a su handler correspondiente.
+- Permite desacoplar el controlador del caso de uso concreto.
+- Hace que la API sea más delgada y fácil de probar.
+- No sustituye al dominio ni mueve la lógica de negocio fuera de él.
 
 ### Infraestructura
 
