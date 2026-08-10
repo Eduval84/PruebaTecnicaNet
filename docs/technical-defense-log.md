@@ -23,6 +23,78 @@ Cuando comparta pantalla, el recorrido recomendado es:
 4. Explicar cómo cada commit corresponde a un paso pequeño y verificable.
 5. Cerrar remarcando que la arquitectura sirve a las reglas de negocio, no al revés.
 
+## Guion Por Puntos
+
+### Punto 1. Validación de fecha de fabricación
+
+Qué mostrar:
+- El test `VehicleManufacturingDateTests`.
+- El value object `ManufacturingDate`.
+
+Qué decir:
+- "Empiezo por esta regla porque es la más pequeña y me permite enseñar el enfoque TDD sin ruido."
+- "La fecha de fabricación es un invariante puro del dominio, así que la validación vive aquí y no en una capa superior."
+- "El test nace primero y después aplico la implementación mínima para hacerlo pasar."
+
+Mensaje clave:
+- El dominio protege la regla desde el centro del sistema.
+
+### Punto 2. Un alquiler activo por cliente
+
+Qué mostrar:
+- El test `CustomerRentalRuleTests`.
+- El agregado `Customer`.
+
+Qué decir:
+- "Esta regla demuestra que el agregado solo guarda el estado que necesita para proteger una invariante de negocio."
+- "No introduzco más modelo del necesario; el cliente solo sabe si ya tiene un alquiler activo."
+- "Con esto evito que el mismo usuario pueda alquilar más de un vehículo al mismo tiempo."
+
+Mensaje clave:
+- El agregado se mantiene pequeño y enfocado.
+
+### Punto 3. Devolución del vehículo
+
+Qué mostrar:
+- El test `CustomerReturnRuleTests`.
+- El método `EndRental()` en `Customer`.
+
+Qué decir:
+- "Una vez cerrada la restricción de un solo alquiler activo, necesito liberar ese estado cuando el vehículo se devuelve."
+- "La implementación es mínima: solo cambio el estado de alquiler activo para permitir un nuevo alquiler."
+- "Todavía no modelo el vehículo concreto devuelto porque la regla actual no lo necesita."
+
+Mensaje clave:
+- Solo incorporo el comportamiento estrictamente necesario para cumplir la regla.
+
+### Punto 4. Preparación del entorno
+
+Qué mostrar:
+- `global.json`.
+- `Directory.Build.props`.
+- `Directory.Build.targets`.
+
+Qué decir:
+- "Ajusté el entorno para que la prueba técnica sea ejecutable en esta máquina sin fricción."
+- "El objetivo no es tocar la lógica de negocio, sino asegurar que el ciclo TDD sea estable."
+- "Prefiero resolver el tooling una sola vez y centrar la conversación en arquitectura y reglas de negocio."
+
+Mensaje clave:
+- El entorno acompaña al diseño, no lo condiciona.
+
+### Punto 5. Siguiente paso natural
+
+Qué mostrar:
+- La carpeta `ApplicationCore` y los contratos de la capa de aplicación.
+
+Qué decir:
+- "Con el dominio ya probado, el siguiente paso lógico es movernos a la capa de aplicación."
+- "Ahí empezamos a introducir comandos, handlers, puertos y el patrón Presenter."
+- "De esa forma mantenemos el dominio limpio y dejamos que la aplicación orqueste los casos de uso."
+
+Mensaje clave:
+- Primero dominio, luego aplicación, después infraestructura y finalmente la API.
+
 ## Orden Lógico De Abordaje
 
 El punto 1 debe ser la validación de la fecha de fabricación porque es la regla más pequeña, más aislada y más fácil de defender desde dominio:
