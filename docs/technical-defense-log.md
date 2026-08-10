@@ -23,6 +23,21 @@ Cuando comparta pantalla, el recorrido recomendado es:
 4. Explicar cómo cada commit corresponde a un paso pequeño y verificable.
 5. Cerrar remarcando que la arquitectura sirve a las reglas de negocio, no al revés.
 
+## Orden Lógico De Abordaje
+
+El punto 1 debe ser la validación de la fecha de fabricación porque es la regla más pequeña, más aislada y más fácil de defender desde dominio:
+
+- Es una invariante pura del negocio.
+- No depende todavía de base de datos, controladores ni casos de uso.
+- Permite mostrar el ciclo TDD completo en su forma más simple: test rojo, implementación mínima y test verde.
+- Sirve para explicar la filosofía de la solución antes de entrar en capas más complejas.
+
+Cómo contarlo en la entrevista:
+
+1. "Empiezo por esta regla porque me permite enseñar la esencia de la arquitectura sin ruido."
+2. "Primero valido la invariante en dominio, luego la hago pasar con la mínima implementación."
+3. "A partir de ahí ya puedo ir creciendo hacia reglas más complejas sin romper el enfoque."
+
 ## Notas De Arquitectura
 
 ### Dominio
@@ -72,6 +87,9 @@ Historial de commits:
 
 Cómo explicarlo:
 - "Llevé la validación de antigüedad al dominio porque es un invariante puro del negocio. Primero escribí el test y luego implementé el value object más pequeño posible para hacerlo pasar."
+
+Punto de defensa:
+- Este es el mejor primer ejemplo porque es simple, verificable y demuestra que la arquitectura protege la regla de negocio desde el centro del sistema.
 
 ### 2. Un alquiler activo por cliente
 
