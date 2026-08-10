@@ -39,6 +39,15 @@ Qué decir:
 Mensaje clave:
 - El dominio protege la regla desde el centro del sistema.
 
+Checklist de navegación:
+
+1. Abrir `README.md` para situar la arquitectura general.
+2. Abrir `src/GtMotive.Estimate.Microservice.Domain` para mostrar dónde vive la regla.
+3. Abrir `test/unit/GtMotive.Estimate.Microservice.UnitTests/VehicleManufacturingDateTests.cs`.
+4. Abrir `src/GtMotive.Estimate.Microservice.Domain/ValueObjects/ManufacturingDate.cs`.
+5. Mostrar el historial de commits con `git log --oneline -n 5`.
+6. Cerrar enseñando el documento `docs/technical-defense-log.md` como resumen de la narrativa.
+
 ### Punto 2. Un alquiler activo por cliente
 
 Qué mostrar:
@@ -53,6 +62,13 @@ Qué decir:
 Mensaje clave:
 - El agregado se mantiene pequeño y enfocado.
 
+Checklist de navegación:
+
+1. Abrir `test/unit/GtMotive.Estimate.Microservice.UnitTests/CustomerRentalRuleTests.cs`.
+2. Abrir `src/GtMotive.Estimate.Microservice.Domain/Customer.cs`.
+3. Señalar que el estado mínimo del agregado es suficiente para proteger la regla.
+4. Mostrar el test verde y el commit asociado.
+
 ### Punto 3. Devolución del vehículo
 
 Qué mostrar:
@@ -66,6 +82,13 @@ Qué decir:
 
 Mensaje clave:
 - Solo incorporo el comportamiento estrictamente necesario para cumplir la regla.
+
+Checklist de navegación:
+
+1. Abrir `test/unit/GtMotive.Estimate.Microservice.UnitTests/CustomerReturnRuleTests.cs`.
+2. Abrir `src/GtMotive.Estimate.Microservice.Domain/Customer.cs`.
+3. Mostrar el método `EndRental()` y explicar que solo libera el estado.
+4. Enseñar que el test pasa sin añadir todavía más complejidad al modelo.
 
 ### Punto 4. Preparación del entorno
 
@@ -82,6 +105,13 @@ Qué decir:
 Mensaje clave:
 - El entorno acompaña al diseño, no lo condiciona.
 
+Checklist de navegación:
+
+1. Abrir `global.json`.
+2. Abrir `Directory.Build.props`.
+3. Abrir `Directory.Build.targets`.
+4. Explicar que estos cambios solo sostienen la ejecución local del TDD.
+
 ### Punto 5. Siguiente paso natural
 
 Qué mostrar:
@@ -94,6 +124,13 @@ Qué decir:
 
 Mensaje clave:
 - Primero dominio, luego aplicación, después infraestructura y finalmente la API.
+
+Checklist de navegación:
+
+1. Abrir `src/GtMotive.Estimate.Microservice.ApplicationCore`.
+2. Identificar los contratos y los casos de uso.
+3. Explicar que ahí se introducen comandos, handlers y puertos.
+4. Dejar claro que el Presenter y la API vendrán después como adaptación de la capa de aplicación.
 
 ## Orden Lógico De Abordaje
 
