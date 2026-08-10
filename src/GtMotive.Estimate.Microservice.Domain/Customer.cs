@@ -52,5 +52,13 @@ namespace GtMotive.Estimate.Microservice.Domain
 
             hasActiveRental = true;
         }
+
+        /// <summary>
+        /// Ends the current rental for the customer.
+        /// </summary>
+        public void EndRental()
+        {
+            hasActiveRental = false;
+        }
     }
 }
