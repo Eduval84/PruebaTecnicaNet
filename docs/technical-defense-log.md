@@ -38,6 +38,15 @@ Cómo contarlo en la entrevista:
 2. "Primero valido la invariante en dominio, luego la hago pasar con la mínima implementación."
 3. "A partir de ahí ya puedo ir creciendo hacia reglas más complejas sin romper el enfoque."
 
+Guion práctico en pantalla:
+
+1. Abrir la solución y señalar que el dominio está aislado de la API y de la infraestructura.
+2. Abrir el test `VehicleManufacturingDateTests` y explicar que la regla nace desde el comportamiento esperado.
+3. Señalar la aserción `DomainException` como la forma en la que el dominio protege el invariante.
+4. Abrir `ManufacturingDate` y explicar que es un value object pequeño, centrado solo en validar una fecha.
+5. Mostrar que la regla no depende de base de datos, controlador ni caso de uso, lo que reduce complejidad.
+6. Cerrar enseñando el commit de test rojo y el commit de implementación verde como evidencia del ciclo TDD.
+
 ## Notas De Arquitectura
 
 ### Dominio
@@ -90,6 +99,13 @@ Cómo explicarlo:
 
 Punto de defensa:
 - Este es el mejor primer ejemplo porque es simple, verificable y demuestra que la arquitectura protege la regla de negocio desde el centro del sistema.
+
+Guion corto para decirlo en voz alta:
+
+1. "Empiezo por esta regla porque no depende de ninguna otra capa."
+2. "El test expresa el negocio en lenguaje claro: si la fecha tiene más de cinco años, falla."
+3. "La implementación en dominio es mínima y no arrastra infraestructuras innecesarias."
+4. "Eso me permite enseñar TDD y arquitectura al mismo tiempo sin perder al evaluador en detalles secundarios."
 
 ### 2. Un alquiler activo por cliente
 
