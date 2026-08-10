@@ -9,12 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Domain\**" />
-    <EmbeddedResource Remove="Domain\**" />
-    <None Remove="Domain\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Moq" Version="4.16.0" />
   </ItemGroup>
 
@@ -27,6 +21,7 @@
   <ItemGroup>
     <Folder Include="Api\" />
     <Folder Include="ApplicationCore\" />
+    <Folder Include="Domain\" />
     <Folder Include="Infrastructure\" />
   </ItemGroup>
 

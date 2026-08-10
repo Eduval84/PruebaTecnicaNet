@@ -3,7 +3,7 @@ using FluentAssertions;
 using GtMotive.Estimate.Microservice.Domain;
 using Xunit;
 
-namespace GtMotive.Estimate.Microservice.UnitTests;
+namespace GtMotive.Estimate.Microservice.UnitTests.Domain;
 
 public class VehicleManufacturingDateTests
 {
