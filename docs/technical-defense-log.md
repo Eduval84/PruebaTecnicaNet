@@ -636,7 +636,7 @@ Historial de commits:
 - `8d18242` - `feat(api): add presenters and controllers for CreateVehicle and ListAvailableVehicles`
 
 Resultado final:
-- 32/32 tests en verde.
+- 38/38 tests en verde.
 - 0 errores de compilación (solo 2 warnings esperados de proyectos de test vacíos).
 - Todos los casos de uso con su presenter, controller y DI registrados.
 
@@ -945,6 +945,20 @@ Resultado:
 Cómo explicarlo:
 - "Con este último endpoint cierro la adaptación completa de la API al patrón MediatR de la template."
 
+### 26. Cierre de Fase 3: frontera HTTP alineada con MediatR
+
+Objetivo:
+- Confirmar que los cuatro endpoints del microservicio ya siguen el patrón explícito de la template basado en MediatR.
+
+Resultado:
+- `CreateVehicle`, `ListAvailableVehicles`, `RentVehicle` y `ReturnVehicle` ya entran por `Request + Handler + IMediator`.
+- Validación completa de la solución con `dotnet test src/microservice.sln --nologo` en verde.
+- Total actual de la suite: `38/38` tests correctos.
+
+Cómo explicarlo:
+- "La capa HTTP ya no invoca directamente casos de uso; ahora delega el envío del mensaje a MediatR, exactamente como sugiere la template."
+- "La lógica de negocio sigue donde debe: aplicación y dominio. Lo que cambia es la forma de orquestar la entrada web."
+
 ## Estado Actual De Reglas
 
 - Fecha máxima de fabricación del vehículo: implementada y en verde.
@@ -958,7 +972,7 @@ Cómo explicarlo:
 - Presenter y controller `ListAvailableVehicles` (API): implementados y en verde.
 - Presenter y controller `RentVehicle` (API): implementados y en verde.
 - Presenter y controller `ReturnVehicle` (API): implementados y en verde.
-- Suite completa: **32/32 tests en verde**.
+- Suite completa: **38/38 tests en verde**.
 
 ## Registro De Seguimiento
 
