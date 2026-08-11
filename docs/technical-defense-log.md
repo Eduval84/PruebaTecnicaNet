@@ -367,11 +367,49 @@ Historial de commits:
 Cómo explicarlo:
 - "Solo corregí el entorno para eliminar fricción del ciclo TDD. El objetivo es mantener el foco en el comportamiento de negocio, no en problemas de tooling."
 
+### 7. Tercer caso de uso de la aplicación
+
+Caso elegido:
+- Devolver vehículo.
+
+Qué mostrar:
+- `ReturnVehicleInput`.
+- `ReturnVehicleUseCase`.
+- `IReturnVehicleOutputPort`.
+- `ReturnVehicleOutput`.
+- `ReturnVehicleUseCaseTests`.
+
+Qué decir:
+- "Mantengo el mismo esqueleto del resto de casos de uso para no romper consistencia arquitectónica."
+- "La aplicación orquesta la devolución, pero las transiciones válidas del estado siguen en dominio."
+- "El flujo busca cliente y vehículo, ejecuta `EndRental()` y `Return()`, persiste cambios y responde por output port."
+- "Si no existe cliente o vehículo, corto el flujo por `NotFoundHandle` sin tocar estado." 
+
+Mensaje clave:
+- Misma plantilla de aplicación, nueva intención de negocio, misma disciplina TDD.
+
+Archivos relevantes:
+- `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases/ReturnVehicleInput.cs`
+- `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases/ReturnVehicleOutput.cs`
+- `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases/IReturnVehicleOutputPort.cs`
+- `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases/ReturnVehicleUseCase.cs`
+- `test/unit/GtMotive.Estimate.Microservice.UnitTests/ApplicationCore/ReturnVehicleUseCaseTests.cs`
+
+Historial de commits:
+- `pendiente` - `feat(application): add return vehicle use case using template ports`
+
+Cómo explicarlo:
+- "Primero dejé el test en rojo referenciando contratos que no existían todavía. Después implementé solo lo mínimo: input, output, puerto y caso de uso. Finalmente validé el verde con test filtrado."
+
 ## Estado Actual De Reglas
 
 - Fecha máxima de fabricación del vehículo: implementada y en verde.
 - Un alquiler activo por cliente: implementada y en verde.
-- Casos de uso de crear/listar/alquilar/devolver vehículo: siguiente paso.
+- Devolución de alquiler en dominio (`EndRental` + `Vehicle.Return`): implementada y en verde.
+- Caso de uso `CreateVehicle`: implementado y en verde.
+- Caso de uso `ListAvailableVehicles`: implementado y en verde.
+- Caso de uso `RentVehicle`: implementado y en verde.
+- Caso de uso `ReturnVehicle`: implementado y en verde (commit pendiente en esta iteración).
 
 ## Registro De Seguimiento
 
