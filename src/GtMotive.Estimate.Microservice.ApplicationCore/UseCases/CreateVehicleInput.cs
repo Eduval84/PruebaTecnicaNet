@@ -13,7 +13,6 @@ namespace GtMotive.Estimate.Microservice.ApplicationCore.UseCases
     /// <param name="manufacturingDate">Manufacturing date.</param>
     public sealed class CreateVehicleInput(string vehicleId, string model, DateOnly manufacturingDate) : IUseCaseInput
     {
-
         /// <summary>
         /// Gets the vehicle identifier.
         /// </summary>

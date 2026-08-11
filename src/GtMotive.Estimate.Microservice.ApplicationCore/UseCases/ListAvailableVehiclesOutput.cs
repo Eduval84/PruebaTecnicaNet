@@ -12,7 +12,6 @@ namespace GtMotive.Estimate.Microservice.ApplicationCore.UseCases
     /// <param name="vehicles">Available vehicles.</param>
     public sealed class ListAvailableVehiclesOutput(IReadOnlyCollection<ListAvailableVehiclesOutputItem> vehicles) : IUseCaseOutput
     {
-
         /// <summary>
         /// Gets the available vehicles.
         /// </summary>

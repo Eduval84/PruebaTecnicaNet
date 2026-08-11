@@ -20,7 +20,6 @@ namespace GtMotive.Estimate.Microservice.Infrastructure.Logging
         /// </summary>
         private readonly ILogger<T> _logger = loggerFactory.CreateLogger<T>();
 
-
         /// <summary>
         /// Formats and writes a warning log message.
         /// </summary>

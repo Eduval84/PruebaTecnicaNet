@@ -13,7 +13,6 @@ namespace GtMotive.Estimate.Microservice.ApplicationCore.UseCases
     /// <param name="manufacturingDate">Manufacturing date.</param>
     public sealed class ListAvailableVehiclesOutputItem(string vehicleId, string model, DateOnly manufacturingDate)
     {
-
         /// <summary>
         /// Gets the vehicle identifier.
         /// </summary>

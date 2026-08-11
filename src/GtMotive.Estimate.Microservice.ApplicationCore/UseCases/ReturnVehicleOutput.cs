@@ -10,7 +10,6 @@ namespace GtMotive.Estimate.Microservice.ApplicationCore.UseCases
     /// <param name="vehicleId">Vehicle identifier.</param>
     public sealed class ReturnVehicleOutput(string customerId, string vehicleId) : IUseCaseOutput
     {
-
         /// <summary>
         /// Gets the customer identifier.
         /// </summary>
