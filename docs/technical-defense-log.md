@@ -751,6 +751,30 @@ Cómo explicarlo:
 - "Con estas pruebas cerramos el contrato HTTP tanto para error (404) como para éxito (200) en rent y return."
 - "El controller delega al caso de uso y el Presenter define la forma de respuesta, siguiendo la plantilla hexagonal."
 
+### 17. Contrato HTTP 400 para Rent y Return por payload inválido
+
+Objetivo:
+- Completar la matriz de comportamiento HTTP en alquiler y devolución validando `400 BadRequest` cuando faltan identificadores obligatorios en el body.
+
+Decisión técnica:
+- Escribir primero tests de infraestructura que demuestran el fallo: sin validación explícita, el controller terminaba devolviendo `500` por el `ActionResult` por defecto del presenter.
+- Corregir en la frontera HTTP añadiendo `[Required]` sobre `CustomerId` y `VehicleId` en los request models.
+- Mantener intacto dominio, casos de uso y presenters porque la responsabilidad de este fallo era de contrato de entrada.
+
+Archivos relevantes:
+- `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Specs/RentalBadRequestInfrastructureTests.cs`
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/RentVehicleRequest.cs`
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/ReturnVehicleRequest.cs`
+
+Resultado:
+- Dos tests nuevos en verde:
+	- `POST /api/rentals/rent` devuelve `400` y no ejecuta el use case cuando falta `customerId`.
+	- `POST /api/rentals/return` devuelve `400` y no ejecuta el use case cuando falta `vehicleId`.
+
+Cómo explicarlo:
+- "La validación de contrato pertenece a la frontera HTTP; por eso la resolví en los request models y no en aplicación ni dominio."
+- "El test prueba además que, cuando ModelState falla, el caso de uso no se ejecuta."
+
 ## Estado Actual De Reglas
 
 - Fecha máxima de fabricación del vehículo: implementada y en verde.
