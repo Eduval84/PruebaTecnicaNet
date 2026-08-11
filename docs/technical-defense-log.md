@@ -493,17 +493,97 @@ Historial de commits:
 - `4e3f239` - `feat(api): add rental presenters and controllers with consistent mappings`
 
 Cómo explicarlo:
-- "En aplicación ya teníamos decisiones de negocio para no encontrados y casos inválidos; aquí trasladé ese resultado al contrato HTTP de forma estable y predecible: 200 para éxito, 404 para not found por puerto, y 400 para reglas de dominio por filtro global." 
+- "En aplicación ya teníamos decisiones de negocio para no encontrados y casos inválidos; aquí trasladé ese resultado al contrato HTTP de forma estable y predecible: 200 para éxito, 404 para not found por puerto, y 400 para reglas de dominio por filtro global."
+
+### 10. Refactor a primary constructors
+
+Objetivo:
+- Modernizar los constructores explícitos de los casos de uso y adaptadores de infraestructura migrando a la sintaxis de primary constructor de C# 12.
+
+Alcance:
+- 8 clases de `ApplicationCore/UseCases`: `CreateVehicleUseCase`, `ListAvailableVehiclesUseCase`, `RentVehicleUseCase`, `ReturnVehicleUseCase` y sus inputs/outputs.
+- 2 clases de `Infrastructure`: `LoggerAdapter` y `MongoService`.
+
+Qué se hizo:
+- Se movieron los parámetros del constructor a la firma de la clase.
+- Se conservaron exactamente las mismas asignaciones de null-check y la misma lógica funcional.
+- Se separaron refactor y corrección StyleCop en dos commits distintos para mayor claridad en la revisión.
+
+Problemas resueltos:
+- SA1505: blank line after opening brace en primary constructors.
+- SA1507: multiple blank lines en cuerpos de clase.
+
+Archivos relevantes:
+- `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases/*UseCase.cs` (4 archivos)
+- `src/GtMotive.Estimate.Microservice.Infrastructure/Logging/LoggerAdapter.cs`
+- `src/GtMotive.Estimate.Microservice.Infrastructure/MongoDb/MongoService.cs`
+
+Historial de commits:
+- `d9ac6a9` - `refactor(core): migrate use cases and adapters to primary constructors`
+- `adf2f30` - `style(core): fix StyleCop spacing after primary constructor refactor`
+
+Cómo explicarlo:
+- "Separé el refactor de la corrección de estilo para que cada commit tenga un único propósito y sea fácil de revertir si fuera necesario. No cambié ninguna lógica funcional, solo la sintaxis del constructor."
+
+### 11. Edge case en CreateVehicle y capa API para todos los casos de uso
+
+Objetivo:
+- Completar la cobertura TDD de `CreateVehicle` con el edge case de fecha inválida y extender la capa API a los cuatro casos de uso.
+
+**Edge case de CreateVehicle**
+
+Regla de negocio:
+- El dominio ya rechaza fechas de fabricación anteriores a 5 años lanzando `DomainException`.
+- El test verifica que el use case deja propagarse esa excepción sin capturarla, y que los repositorios/presenters nunca se invocan gracias a `MockBehavior.Strict`.
+
+Historial de commits:
+- `aeb07c1` - `test(use-case): add edge case for CreateVehicle with invalid manufacturing date`
+
+**Presenters y tests para CreateVehicle y ListAvailableVehicles**
+
+Qué se implementó:
+- `CreateVehiclePresenter`: `StandardHandle` → `200 OK` con `CreateVehicleOutput`.
+- `ListAvailableVehiclesPresenter`: `StandardHandle` → `200 OK` con `ListAvailableVehiclesOutput`.
+- `CreateVehicleController`: `POST /api/vehicles/create` con `[JsonRequired]` en `ManufacturingDate` para cumplir la regla S6964 de SonarQube.
+- `ListAvailableVehiclesController`: `GET /api/vehicles/available`.
+- Registro de ambos presenters en `UserInterfaceExtensions.AddPresenters()`.
+- 2 tests nuevos en `RentalPresentersTests`: mapeo de `StandardHandle` para `CreateVehiclePresenter` y `ListAvailableVehiclesPresenter`.
+
+Archivos relevantes:
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/CreateVehiclePresenter.cs`
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/CreateVehicleController.cs`
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/CreateVehicleRequest.cs`
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/ListAvailableVehiclesPresenter.cs`
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/ListAvailableVehiclesController.cs`
+- `src/GtMotive.Estimate.Microservice.Api/DependencyInjection/UserInterfaceExtensions.cs`
+- `test/unit/GtMotive.Estimate.Microservice.UnitTests/Api/UseCases/RentalPresentersTests.cs`
+
+Historial de commits:
+- `7945f68` - `test(api): add presenter mapping tests for CreateVehicle and ListAvailableVehicles`
+- `8d18242` - `feat(api): add presenters and controllers for CreateVehicle and ListAvailableVehicles`
+
+Resultado final:
+- 20/20 tests en verde.
+- 0 errores de compilación (solo 2 warnings esperados de proyectos de test vacíos).
+- Todos los casos de uso con su presenter, controller y DI registrados.
+
+Cómo explicarlo:
+- "Apliqué exactamente el mismo patrón Presenter que ya habíamos probado en rent/return. Para `CreateVehicle` marqué `ManufacturingDate` con `[JsonRequired]` para satisfacer la regla de SonarQube que requiere que value types usados como input de controladores sean explícitamente requeridos."
 
 ## Estado Actual De Reglas
 
 - Fecha máxima de fabricación del vehículo: implementada y en verde.
 - Un alquiler activo por cliente: implementada y en verde.
 - Devolución de alquiler en dominio (`EndRental` + `Vehicle.Return`): implementada y en verde.
-- Caso de uso `CreateVehicle`: implementado y en verde.
+- Caso de uso `CreateVehicle`: implementado y en verde (edge case fecha inválida cubierto).
 - Caso de uso `ListAvailableVehicles`: implementado y en verde.
-- Caso de uso `RentVehicle`: implementado y en verde.
-- Caso de uso `ReturnVehicle`: implementado y en verde.
+- Caso de uso `RentVehicle`: implementado y en verde (3 edge cases cubiertos).
+- Caso de uso `ReturnVehicle`: implementado y en verde (3 edge cases cubiertos).
+- Presenter y controller `CreateVehicle` (API): implementados y en verde.
+- Presenter y controller `ListAvailableVehicles` (API): implementados y en verde.
+- Presenter y controller `RentVehicle` (API): implementados y en verde.
+- Presenter y controller `ReturnVehicle` (API): implementados y en verde.
+- Suite completa: **20/20 tests en verde**.
 
 ## Registro De Seguimiento
 
