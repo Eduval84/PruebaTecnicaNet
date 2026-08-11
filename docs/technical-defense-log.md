@@ -636,7 +636,7 @@ Historial de commits:
 - `8d18242` - `feat(api): add presenters and controllers for CreateVehicle and ListAvailableVehicles`
 
 Resultado final:
-- 20/20 tests en verde.
+- 32/32 tests en verde.
 - 0 errores de compilación (solo 2 warnings esperados de proyectos de test vacíos).
 - Todos los casos de uso con su presenter, controller y DI registrados.
 
@@ -775,6 +775,20 @@ Cómo explicarlo:
 - "La validación de contrato pertenece a la frontera HTTP; por eso la resolví en los request models y no en aplicación ni dominio."
 - "El test prueba además que, cuando ModelState falla, el caso de uso no se ejecuta."
 
+### 18. Cierre de validación global
+
+Objetivo:
+- Confirmar que toda la solución queda estable y consistente después de completar las capas de dominio, aplicación, infraestructura y API.
+
+Resultado:
+- Ejecución completa de `dotnet test src/microservice.sln --nologo` en verde.
+- Total validado: `32/32` tests correctos.
+- Cobertura funcional repartida entre unit tests, functional tests e infrastructure tests.
+
+Cómo explicarlo:
+- "Cierro con una validación completa de la solución para demostrar que no he optimizado solo casos aislados, sino el sistema completo."
+- "El resultado final enseña una evolución TDD trazable: dominio primero, aplicación después, integración/infrastructura al final."
+
 ## Estado Actual De Reglas
 
 - Fecha máxima de fabricación del vehículo: implementada y en verde.
@@ -788,7 +802,7 @@ Cómo explicarlo:
 - Presenter y controller `ListAvailableVehicles` (API): implementados y en verde.
 - Presenter y controller `RentVehicle` (API): implementados y en verde.
 - Presenter y controller `ReturnVehicle` (API): implementados y en verde.
-- Suite completa: **20/20 tests en verde**.
+- Suite completa: **32/32 tests en verde**.
 
 ## Registro De Seguimiento
 
