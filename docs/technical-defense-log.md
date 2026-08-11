@@ -789,6 +789,31 @@ Cómo explicarlo:
 - "Cierro con una validación completa de la solución para demostrar que no he optimizado solo casos aislados, sino el sistema completo."
 - "El resultado final enseña una evolución TDD trazable: dominio primero, aplicación después, integración/infrastructura al final."
 
+### 19. Ejecución local sin dependencias externas
+
+Objetivo:
+- Asegurar que cualquier persona pueda levantar la API en local sin instalar MongoDB, Key Vault ni servicios corporativos adicionales.
+
+Decisión técnica:
+- Añadir `launchSettings.json` al Host para que `dotnet run` arranque en `Development` por defecto.
+- Mantener en desarrollo la infraestructura en memoria ya registrada por la solución.
+- Eliminar del `Dockerfile` la dependencia implícita de un feed corporativo y añadir `docker-compose.yml` para un arranque de contenedor en un solo comando.
+- Documentar ambos caminos de ejecución en `README.md`.
+
+Archivos relevantes:
+- `src/GtMotive.Estimate.Microservice.Host/Properties/launchSettings.json`
+- `src/GtMotive.Estimate.Microservice.Host/Dockerfile`
+- `docker-compose.yml`
+- `README.md`
+
+Resultado:
+- `dotnet run --project src/GtMotive.Estimate.Microservice.Host` levanta la API en `http://localhost:5080` en entorno `Development`.
+- La solución sigue sin requerir base de datos externa para ejecución local.
+
+Cómo explicarlo:
+- "No me limité a que el código compile; dejé preparado el arranque real para un evaluador sin dependencias externas."
+- "La arquitectura sigue siendo la misma, pero la experiencia de ejecución local queda cerrada y reproducible."
+
 ## Estado Actual De Reglas
 
 - Fecha máxima de fabricación del vehículo: implementada y en verde.

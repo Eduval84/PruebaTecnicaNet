@@ -41,6 +41,40 @@ Sample implementation of the Clean Architecture Principles with .NET Core. Use c
 
 This template is a Virtual Wallet applicationn which a customer can register an account then manage the balance with Deposits, Withdraws and Transfers.
 
+## Local Execution
+
+This repository has been adapted so the microservice can run locally without installing external infrastructure such as MongoDB, Key Vault or other services.
+
+### Requirements
+
+- .NET SDK 9.0.x
+- Optional: Docker / Docker Compose
+
+### Run With dotnet
+
+From the repository root:
+
+```powershell
+dotnet test src/microservice.sln --nologo
+dotnet run --project src/GtMotive.Estimate.Microservice.Host
+```
+
+Notes:
+
+- The Host project includes a launch profile that starts the application in `Development`.
+- In local development the application uses the in-memory infrastructure registered in `AddBaseInfrastructure(true)`.
+- Swagger is available at `http://localhost:5080/swagger`.
+
+### Run With Docker Compose
+
+From the repository root:
+
+```powershell
+docker compose up --build
+```
+
+The API will be available at `http://localhost:5080/swagger`.
+
 ## Clean Architecture
 The Clean Architecture style focus on a loosely coupled implementation of use cases and it is summarized as:
 - It is an architecture style that the Use Cases are the central organizing structure.
