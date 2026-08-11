@@ -28,5 +28,21 @@ namespace GtMotive.Estimate.Microservice.UnitTests.ApplicationCore
             unitOfWork.Verify(x => x.Save(), Times.Once);
             presenter.Verify(x => x.StandardHandle(It.Is<CreateVehicleOutput>(output => output.VehicleId == "vehicle-1")), Times.Once);
         }
+
+        [Fact]
+        public async Task ExecuteShouldThrowDomainExceptionWhenManufacturingDateIsOlderThanFiveYears()
+        {
+            // Arrange
+            var vehicleRepository = new Mock<IVehicleRepository>(MockBehavior.Strict);
+            var unitOfWork = new Mock<IUnitOfWork>(MockBehavior.Strict);
+            var presenter = new Mock<ICreateVehicleOutputPort>(MockBehavior.Strict);
+            var useCase = new CreateVehicleUseCase(vehicleRepository.Object, unitOfWork.Object, presenter.Object);
+            var tooOldDate = DateOnly.FromDateTime(DateTime.UtcNow.Date.AddYears(-6));
+            var input = new CreateVehicleInput("vehicle-1", "model-1", tooOldDate);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<DomainException>(() => useCase.Execute(input));
+            Assert.Equal("Manufacturing date cannot be older than five years.", exception.Message);
+        }
     }
 }
