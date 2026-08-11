@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using GtMotive.Estimate.Microservice.Api.UseCases;
 using GtMotive.Estimate.Microservice.ApplicationCore.UseCases;
 using Microsoft.AspNetCore.Http;
@@ -78,6 +81,49 @@ namespace GtMotive.Estimate.Microservice.UnitTests.Api.UseCases
             Assert.Equal(StatusCodes.Status404NotFound, problemDetails.Status);
             Assert.Equal("Not Found", problemDetails.Title);
             Assert.Equal("Vehicle 'vehicle-404' was not found for return.", problemDetails.Detail);
+        }
+
+        [Fact]
+        public void CreatePresenterShouldMapStandardHandleToOkResult()
+        {
+            // Arrange
+            var presenter = new CreateVehiclePresenter();
+            var output = new CreateVehicleOutput("vehicle-1", "model-1", new DateOnly(2024, 1, 1));
+
+            // Act
+            presenter.StandardHandle(output);
+
+            // Assert
+            var result = Assert.IsType<OkObjectResult>(presenter.ActionResult);
+            Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+            var payload = Assert.IsType<CreateVehicleOutput>(result.Value);
+            Assert.Equal("vehicle-1", payload.VehicleId);
+            Assert.Equal("model-1", payload.Model);
+        }
+
+        [Fact]
+        public void ListAvailablePresenterShouldMapStandardHandleToOkResult()
+        {
+            // Arrange
+            var presenter = new ListAvailableVehiclesPresenter();
+            var outputItems = new List<ListAvailableVehiclesOutputItem>
+            {
+                new("vehicle-1", "model-1", new DateOnly(2024, 1, 1)),
+                new("vehicle-2", "model-2", new DateOnly(2023, 6, 15)),
+            };
+            var output = new ListAvailableVehiclesOutput(outputItems);
+
+            // Act
+            presenter.StandardHandle(output);
+
+            // Assert
+            var result = Assert.IsType<OkObjectResult>(presenter.ActionResult);
+            Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+            var payload = Assert.IsType<ListAvailableVehiclesOutput>(result.Value);
+            Assert.Equal(2, payload.Vehicles.Count);
+            var vehiclesList = payload.Vehicles.ToList();
+            Assert.Equal("vehicle-1", vehiclesList[0].VehicleId);
+            Assert.Equal("vehicle-2", vehiclesList[1].VehicleId);
         }
     }
 }
