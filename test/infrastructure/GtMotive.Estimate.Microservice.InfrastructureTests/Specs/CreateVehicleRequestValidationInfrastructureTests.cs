@@ -53,6 +53,40 @@ namespace GtMotive.Estimate.Microservice.InfrastructureTests.Specs
             Assert.Equal(new DateOnly(2025, 1, 15), spyUseCase.LastInput.ManufacturingDate);
         }
 
+        [Fact]
+        public async Task CreateShouldReturnBadRequestAndNotInvokeUseCaseWhenManufacturingDateIsMissing()
+        {
+            // Arrange
+            var spyUseCase = new SpyCreateVehicleUseCase();
+
+            var hostBuilder = new WebHostBuilder()
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseEnvironment("IntegrationTest")
+                .UseDefaultServiceProvider(options => { options.ValidateScopes = true; })
+                .ConfigureAppConfiguration((context, builder) => { builder.AddEnvironmentVariables(); })
+                .UseStartup<Startup>()
+                .ConfigureTestServices(services =>
+                {
+                    services.AddSingleton(spyUseCase);
+                    services.AddSingleton<IUseCase<CreateVehicleInput>>(sp => sp.GetRequiredService<SpyCreateVehicleUseCase>());
+                });
+
+            using var server = new TestServer(hostBuilder);
+            using var client = server.CreateClient();
+
+            const string invalidRequestBody = "{\"vehicleId\":\"vehicle-infra-2\",\"model\":\"Model Infra Invalid\"}";
+
+            using var content = new StringContent(invalidRequestBody, Encoding.UTF8, "application/json");
+
+            // Act
+            var response = await client.PostAsync(new Uri("/api/vehicles/create", UriKind.Relative), content);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Equal(0, spyUseCase.ExecutionCount);
+            Assert.Null(spyUseCase.LastInput);
+        }
+
         private sealed class SpyCreateVehicleUseCase : IUseCase<CreateVehicleInput>
         {
             public int ExecutionCount { get; private set; }

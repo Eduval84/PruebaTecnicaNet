@@ -666,6 +666,27 @@ Cómo explicarlo:
 - "No quité seguridad del pipeline para hacer pasar tests; ajusté el test host a runtime actual y mantuve la plantilla intacta."
 - "El test verifica comportamiento HTTP y model binding en la frontera, sin mover reglas de negocio fuera de aplicación/dominio."
 
+### 13. Validación 400 en CreateVehicle por payload inválido
+
+Objetivo:
+- Verificar en infraestructura que un request inválido (sin `manufacturingDate`) devuelve `400 Bad Request` y no ejecuta el caso de uso.
+
+Decisión técnica:
+- Reutilizar el mismo arranque de TestServer con `UseAuthentication`, `UseAuthorization` y registro de MediatR.
+- Inyectar un spy de `IUseCase<CreateVehicleInput>` para comprobar no invocación cuando falla model validation.
+
+Archivo relevante:
+- `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Specs/CreateVehicleRequestValidationInfrastructureTests.cs`
+
+Resultado:
+- Test de infraestructura en verde con dos escenarios:
+	- Payload válido: binding correcto e invocación del use case.
+	- Payload inválido: `400 BadRequest` y `ExecutionCount = 0`.
+
+Cómo explicarlo:
+- "La validación de contrato HTTP se prueba en la frontera sin romper la arquitectura interna."
+- "Cuando el contrato falla, el caso de uso no se ejecuta, preservando la responsabilidad de cada capa."
+
 ## Estado Actual De Reglas
 
 - Fecha máxima de fabricación del vehículo: implementada y en verde.
