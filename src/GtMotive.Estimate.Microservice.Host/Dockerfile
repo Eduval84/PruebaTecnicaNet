@@ -5,7 +5,7 @@ WORKDIR /app
 ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0.100-noble-amd64 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0.202-noble-amd64 AS build
 WORKDIR /src
 COPY Directory.Build.* ./
 COPY NuGet.config .
