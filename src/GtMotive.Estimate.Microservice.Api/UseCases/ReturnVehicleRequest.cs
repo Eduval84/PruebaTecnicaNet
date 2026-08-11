@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using MediatR;
 
 namespace GtMotive.Estimate.Microservice.Api.UseCases
 {
-    public sealed class ReturnVehicleRequest
+    public sealed class ReturnVehicleRequest : IRequest<IWebApiPresenter>
     {
         [Required]
         public string CustomerId { get; set; } = string.Empty;

@@ -922,6 +922,29 @@ Resultado:
 Cómo explicarlo:
 - "El request web deja de llamar directamente al caso de uso y pasa por el mediador, como marca la template."
 
+### 25. MediatR explícito en ReturnVehicle
+
+Objetivo:
+- Cerrar la migración de la frontera HTTP al patrón explícito de MediatR también para el endpoint de devolución.
+
+Decisión técnica:
+- Convertir `ReturnVehicleRequest` en mensaje `IRequest<IWebApiPresenter>`.
+- Añadir `ReturnVehicleRequestHandler` para crear `ReturnVehicleInput`, ejecutar el caso de uso y devolver el presenter.
+- Simplificar `ReturnVehicleController` para delegar el flujo en `IMediator`.
+
+Archivos relevantes:
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/ReturnVehicleRequest.cs`
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/ReturnVehicleRequestHandler.cs`
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/ReturnVehicleController.cs`
+- `test/unit/GtMotive.Estimate.Microservice.UnitTests/Api/UseCases/ReturnVehicleRequestHandlerTests.cs`
+
+Resultado:
+- `ReturnVehicle` ya usa MediatR de forma explícita y consistente con el resto de endpoints.
+- Validado en tests unitarios y de infraestructura.
+
+Cómo explicarlo:
+- "Con este último endpoint cierro la adaptación completa de la API al patrón MediatR de la template."
+
 ## Estado Actual De Reglas
 
 - Fecha máxima de fabricación del vehículo: implementada y en verde.
