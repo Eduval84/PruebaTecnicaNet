@@ -10,6 +10,10 @@ namespace GtMotive.Estimate.Microservice.Api.Authorization
         public static void Configure(AuthorizationOptions options)
         {
             ArgumentNullException.ThrowIfNull(options);
+
+            options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
         }
     }
 }

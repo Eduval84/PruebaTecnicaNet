@@ -814,6 +814,29 @@ Cómo explicarlo:
 - "No me limité a que el código compile; dejé preparado el arranque real para un evaluador sin dependencias externas."
 - "La arquitectura sigue siendo la misma, pero la experiencia de ejecución local queda cerrada y reproducible."
 
+### 20. Endpoints autenticados por defecto
+
+Objetivo:
+- Hacer que la API quede protegida por defecto, evitando acceso anónimo accidental a los endpoints del microservicio.
+
+Decisión técnica:
+- Configurar una `FallbackPolicy` en autorización para requerir usuario autenticado en toda la API.
+- Mantener los tests de infraestructura con un esquema de autenticación de prueba, pero exigir un header explícito para simular credenciales válidas.
+- Añadir tests de infraestructura que verifiquen que peticiones anónimas reciben `401 Unauthorized`.
+
+Archivos relevantes:
+- `src/GtMotive.Estimate.Microservice.Api/Authorization/AuthorizationOptionsExtensions.cs`
+- `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Infrastructure/Startup.cs`
+- `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Specs/AuthenticatedEndpointsInfrastructureTests.cs`
+
+Resultado:
+- Los endpoints quedan autenticados por defecto.
+- `InfrastructureTests` verifica tanto acceso autorizado como rechazo anónimo.
+
+Cómo explicarlo:
+- "En vez de confiar en que cada controller recuerde poner `[Authorize]`, protegí la API por defecto desde la configuración central."
+- "Los tests de infraestructura distinguen entre llamadas anónimas y llamadas autenticadas de forma explícita."
+
 ## Estado Actual De Reglas
 
 - Fecha máxima de fabricación del vehículo: implementada y en verde.

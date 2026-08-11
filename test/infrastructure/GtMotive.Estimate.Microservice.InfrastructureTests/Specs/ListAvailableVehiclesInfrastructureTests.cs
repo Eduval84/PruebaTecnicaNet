@@ -35,6 +35,7 @@ namespace GtMotive.Estimate.Microservice.InfrastructureTests.Specs
 
             using var server = new TestServer(hostBuilder);
             using var client = server.CreateClient();
+            client.DefaultRequestHeaders.Add(Startup.TestAuthenticationHeaderName, "true");
 
             // Act
             var response = await client.GetAsync(new Uri("/api/vehicles/available", UriKind.Relative));

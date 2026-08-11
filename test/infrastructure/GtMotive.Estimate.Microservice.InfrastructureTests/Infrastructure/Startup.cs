@@ -16,6 +16,8 @@ namespace GtMotive.Estimate.Microservice.InfrastructureTests.Infrastructure
 {
     internal sealed class Startup(IWebHostEnvironment environment, IConfiguration configuration)
     {
+        internal const string TestAuthenticationHeaderName = "X-Test-Auth";
+
         public IWebHostEnvironment Environment { get; } = environment;
 
         public IConfiguration Configuration { get; } = configuration;
@@ -68,6 +70,11 @@ namespace GtMotive.Estimate.Microservice.InfrastructureTests.Infrastructure
 
             protected override Task<AuthenticateResult> HandleAuthenticateAsync()
             {
+                if (!Request.Headers.ContainsKey(TestAuthenticationHeaderName))
+                {
+                    return Task.FromResult(AuthenticateResult.NoResult());
+                }
+
                 var identity = new ClaimsIdentity(
                     [new Claim(ClaimTypes.NameIdentifier, "integration-test-user")],
                     SchemeName);

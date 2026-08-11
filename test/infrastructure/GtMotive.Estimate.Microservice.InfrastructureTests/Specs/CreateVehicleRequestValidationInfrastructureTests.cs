@@ -36,6 +36,7 @@ namespace GtMotive.Estimate.Microservice.InfrastructureTests.Specs
 
             using var server = new TestServer(hostBuilder);
             using var client = server.CreateClient();
+            client.DefaultRequestHeaders.Add(Startup.TestAuthenticationHeaderName, "true");
 
             const string validRequestBody = "{\"vehicleId\":\"vehicle-infra-1\",\"model\":\"Model Infra\",\"manufacturingDate\":\"2025-01-15\"}";
 
@@ -73,6 +74,7 @@ namespace GtMotive.Estimate.Microservice.InfrastructureTests.Specs
 
             using var server = new TestServer(hostBuilder);
             using var client = server.CreateClient();
+            client.DefaultRequestHeaders.Add(Startup.TestAuthenticationHeaderName, "true");
 
             const string invalidRequestBody = "{\"vehicleId\":\"vehicle-infra-2\",\"model\":\"Model Infra Invalid\"}";
 

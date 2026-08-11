@@ -36,6 +36,7 @@ namespace GtMotive.Estimate.Microservice.InfrastructureTests.Specs
 
             using var server = new TestServer(hostBuilder);
             using var client = server.CreateClient();
+            client.DefaultRequestHeaders.Add(Startup.TestAuthenticationHeaderName, "true");
 
             const string invalidRequestBody = "{\"vehicleId\":\"vehicle-rent-bad-request\"}";
             using var content = new StringContent(invalidRequestBody, Encoding.UTF8, "application/json");
@@ -69,6 +70,7 @@ namespace GtMotive.Estimate.Microservice.InfrastructureTests.Specs
 
             using var server = new TestServer(hostBuilder);
             using var client = server.CreateClient();
+            client.DefaultRequestHeaders.Add(Startup.TestAuthenticationHeaderName, "true");
 
             const string invalidRequestBody = "{\"customerId\":\"customer-return-bad-request\"}";
             using var content = new StringContent(invalidRequestBody, Encoding.UTF8, "application/json");
