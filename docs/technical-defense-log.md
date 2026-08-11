@@ -899,6 +899,29 @@ Resultado:
 Cómo explicarlo:
 - "El handler encapsula la traducción entre la petición web y el caso de uso, dejando al controller solo como punto de entrada HTTP."
 
+### 24. MediatR explícito en RentVehicle
+
+Objetivo:
+- Alinear el endpoint de alquiler con el patrón explícito de la template: Controller -> MediatR Request -> Handler -> Use Case -> Presenter.
+
+Decisión técnica:
+- Convertir `RentVehicleRequest` en mensaje `IRequest<IWebApiPresenter>`.
+- Añadir `RentVehicleRequestHandler` para construir `RentVehicleInput`, ejecutar el caso de uso y devolver el presenter.
+- Simplificar `RentVehicleController` para delegar el flujo en `IMediator`.
+
+Archivos relevantes:
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/RentVehicleRequest.cs`
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/RentVehicleRequestHandler.cs`
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/RentVehicleController.cs`
+- `test/unit/GtMotive.Estimate.Microservice.UnitTests/Api/UseCases/RentVehicleRequestHandlerTests.cs`
+
+Resultado:
+- `RentVehicle` ya usa MediatR de forma explícita sin alterar sus contratos HTTP `200/400/404`.
+- Validado en tests unitarios y de infraestructura.
+
+Cómo explicarlo:
+- "El request web deja de llamar directamente al caso de uso y pasa por el mediador, como marca la template."
+
 ## Estado Actual De Reglas
 
 - Fecha máxima de fabricación del vehículo: implementada y en verde.

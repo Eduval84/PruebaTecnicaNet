@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using GtMotive.Estimate.Microservice.ApplicationCore.UseCases;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +9,9 @@ namespace GtMotive.Estimate.Microservice.Api.UseCases
 {
     [ApiController]
     [Route("api/rentals")]
-    public sealed class RentVehicleController(IUseCase<RentVehicleInput> rentVehicleUseCase, RentVehiclePresenter rentVehiclePresenter) : ControllerBase
+    public sealed class RentVehicleController(IMediator mediator) : ControllerBase
     {
-        private readonly IUseCase<RentVehicleInput> rentVehicleUseCase = rentVehicleUseCase ?? throw new ArgumentNullException(nameof(rentVehicleUseCase));
-        private readonly RentVehiclePresenter rentVehiclePresenter = rentVehiclePresenter ?? throw new ArgumentNullException(nameof(rentVehiclePresenter));
+        private readonly IMediator mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
         [HttpPost("rent")]
         [ProducesResponseType(typeof(RentVehicleOutput), StatusCodes.Status200OK)]
@@ -21,8 +21,8 @@ namespace GtMotive.Estimate.Microservice.Api.UseCases
         {
             ArgumentNullException.ThrowIfNull(request);
 
-            await rentVehicleUseCase.Execute(new RentVehicleInput(request.CustomerId, request.VehicleId));
-            return rentVehiclePresenter.ActionResult;
+            var presenter = await mediator.Send(request);
+            return presenter.ActionResult;
         }
     }
 }
