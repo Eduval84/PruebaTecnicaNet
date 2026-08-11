@@ -55,7 +55,6 @@ if (!builder.Environment.IsDevelopment())
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var appSettingsSection = builder.Configuration.GetSection("AppSettings");
 builder.Services.Configure<AppSettings>(appSettingsSection);
@@ -134,6 +133,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseSwaggerInApplication(pathBase, builder.Configuration);
+
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

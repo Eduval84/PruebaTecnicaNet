@@ -837,6 +837,21 @@ Cómo explicarlo:
 - "En vez de confiar en que cada controller recuerde poner `[Authorize]`, protegí la API por defecto desde la configuración central."
 - "Los tests de infraestructura distinguen entre llamadas anónimas y llamadas autenticadas de forma explícita."
 
+### 21. Swagger expuesto para la demo
+
+Objetivo:
+- Mantener Swagger siempre accesible para simplificar la demostración funcional del microservicio durante la presentación.
+
+Decisión técnica:
+- Revertir la restricción de Swagger por entorno y dejar el UI disponible de forma permanente.
+- Mantener la autenticación por defecto en los endpoints de negocio, separando la seguridad operativa de la experiencia de demo.
+
+Resultado:
+- El Host vuelve a exponer Swagger y se validó acceso `200 OK` en `http://localhost:5080/swagger/index.html`.
+
+Cómo explicarlo:
+- "Para la demo prioricé accesibilidad de la documentación interactiva sin tocar la protección por defecto de los endpoints de negocio."
+
 ## Estado Actual De Reglas
 
 - Fecha máxima de fabricación del vehículo: implementada y en verde.
