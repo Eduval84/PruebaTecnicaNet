@@ -114,7 +114,7 @@ namespace GtMotive.Estimate.Microservice.Host.DependencyInjection
 
                     options.SwaggerEndpoint(url, $"{AssemblyName} API V{AssemblyVersion}");
 
-                    if (configuration.GetValue<string>("Swagger:EnableTryIt") == "No" || !enableAuth)
+                    if (configuration.GetValue<string>("Swagger:EnableTryIt") == "No")
                     {
                         options.SupportedSubmitMethods();
                     }
