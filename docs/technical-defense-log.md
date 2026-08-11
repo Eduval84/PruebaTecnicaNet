@@ -687,6 +687,26 @@ Cómo explicarlo:
 - "La validación de contrato HTTP se prueba en la frontera sin romper la arquitectura interna."
 - "Cuando el contrato falla, el caso de uso no se ejecuta, preservando la responsabilidad de cada capa."
 
+### 14. Endpoint de listado disponible con payload en infraestructura
+
+Objetivo:
+- Verificar que `GET /api/vehicles/available` responde `200 OK` y devuelve payload cuando el caso de uso publica vehículos disponibles.
+
+Decisión técnica:
+- Mantener el pipeline real de infraestructura de tests (auth/authz + controllers de la API).
+- Sustituir solo `IUseCase<ListAvailableVehiclesInput>` por un spy que publica salida vía `ListAvailableVehiclesPresenter`.
+- Validar tanto ejecución del caso de uso como contenido JSON de respuesta.
+
+Archivo relevante:
+- `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Specs/ListAvailableVehiclesInfrastructureTests.cs`
+
+Resultado:
+- Test en verde validando estado HTTP `200` y presencia de `vehicleId` en el payload serializado.
+
+Cómo explicarlo:
+- "En esta prueba de infraestructura validamos el contrato HTTP del endpoint de listado sin acoplar el test a almacenamiento real."
+- "La respuesta se construye por el Presenter de la plantilla, manteniendo separación de responsabilidades."
+
 ## Estado Actual De Reglas
 
 - Fecha máxima de fabricación del vehículo: implementada y en verde.
