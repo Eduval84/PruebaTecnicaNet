@@ -84,6 +84,14 @@ namespace GtMotive.Estimate.Microservice.FunctionalTests.Infrastructure
             await handlerAction.Invoke(handler);
         }
 
+        public async Task UsingScope(Func<IServiceProvider, Task> scopeAction)
+        {
+            ArgumentNullException.ThrowIfNull(scopeAction);
+
+            using var scope = _serviceProvider.CreateScope();
+            await scopeAction.Invoke(scope.ServiceProvider);
+        }
+
         public void Dispose()
         {
             _serviceProvider.Dispose();

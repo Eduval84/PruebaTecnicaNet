@@ -344,6 +344,27 @@ Cómo explicarlo:
 - "Mantengo el entorno local sin dependencias externas, pero ya pruebo wiring real de DI y puertos."
 - "Es un paso intermedio entre unit tests puros y pruebas HTTP de extremo a extremo."
 
+### 7. Test funcional de listado de vehículos disponibles
+
+Objetivo:
+- Validar de forma integrada que el caso de uso de listado solo devuelve vehículos disponibles.
+
+Decisión técnica:
+- Crear un escenario funcional con dos vehículos: uno disponible y otro alquilado.
+- Alquilar el segundo mediante `RentVehicleUseCase` para que el estado de disponibilidad cambie en dominio.
+- Ejecutar `ListAvailableVehiclesUseCase` y comprobar el resultado expuesto por `ListAvailableVehiclesPresenter`.
+
+Archivos relevantes:
+- `test/functional/GtMotive.Estimate.Microservice.FunctionalTests/Specs/ListAvailableVehiclesFunctionalTests.cs`
+- `test/functional/GtMotive.Estimate.Microservice.FunctionalTests/Infrastructure/CompositionRootTestFixture.cs`
+
+Resultado:
+- Test funcional en verde confirmando que el vehículo alquilado no aparece en el listado de disponibles.
+
+Cómo explicarlo:
+- "Este test prueba el flujo completo de aplicación contra la infraestructura en memoria sin levantar HTTP."
+- "La disponibilidad se valida como comportamiento observable de negocio, no como detalle interno del repositorio."
+
 Qué mostrar:
 - `IVehicleRepository` con `ListAvailable()`.
 - `ListAvailableVehiclesInput`.
