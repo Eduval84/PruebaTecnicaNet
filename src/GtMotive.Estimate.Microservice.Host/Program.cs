@@ -9,8 +9,8 @@ using GtMotive.Estimate.Microservice.Host.Configuration;
 using GtMotive.Estimate.Microservice.Host.DependencyInjection;
 using GtMotive.Estimate.Microservice.Infrastructure;
 using GtMotive.Estimate.Microservice.Infrastructure.MongoDb.Settings;
-using IdentityServer4.AccessTokenValidation;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
@@ -82,13 +82,13 @@ JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 builder.Services.AddAuthentication(options =>
     {
-        options.DefaultScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     })
-    .AddIdentityServerAuthentication(options =>
+    .AddJwtBearer(options =>
     {
         options.Authority = appSettings.JwtAuthority;
-        options.ApiName = "estimate-api";
-        options.SupportedTokens = SupportedTokens.Jwt;
+        options.Audience = "estimate-api";
     });
 
 builder.Services.AddSwagger(appSettings, builder.Configuration);
