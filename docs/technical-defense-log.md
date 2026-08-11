@@ -876,6 +876,29 @@ Cómo explicarlo:
 - "El controller deja de conocer el caso de uso y delega el envío del mensaje en MediatR."
 - "El handler adapta el request web al input de aplicación y devuelve el presenter, manteniendo separadas las responsabilidades de cada capa."
 
+### 23. MediatR explícito en ListAvailableVehicles
+
+Objetivo:
+- Alinear el endpoint de listado disponible con el patrón Controller -> MediatR Request -> Handler -> Use Case -> Presenter definido por la template.
+
+Decisión técnica:
+- Crear `ListAvailableVehiclesRequest` como mensaje `IRequest<IWebApiPresenter>`.
+- Añadir `ListAvailableVehiclesRequestHandler` para ejecutar el caso de uso y devolver el presenter.
+- Simplificar el controller para delegar el flujo en `IMediator`.
+
+Archivos relevantes:
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/ListAvailableVehiclesController.cs`
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/ListAvailableVehiclesRequest.cs`
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/ListAvailableVehiclesRequestHandler.cs`
+- `test/unit/GtMotive.Estimate.Microservice.UnitTests/Api/UseCases/ListAvailableVehiclesRequestHandlerTests.cs`
+
+Resultado:
+- `ListAvailableVehicles` ya sigue explícitamente el patrón MediatR de la template.
+- Validado en tests unitarios y de infraestructura sin cambiar el contrato HTTP del endpoint.
+
+Cómo explicarlo:
+- "El handler encapsula la traducción entre la petición web y el caso de uso, dejando al controller solo como punto de entrada HTTP."
+
 ## Estado Actual De Reglas
 
 - Fecha máxima de fabricación del vehículo: implementada y en verde.
