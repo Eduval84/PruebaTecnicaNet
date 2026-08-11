@@ -378,7 +378,7 @@ Archivos relevantes:
 Historial de commits:
 - `9ab5f0f` - `feat(application): add rent vehicle use case with template ports`
 - `5501412` - `test(application): add failing tests for rent vehicle edge cases`
-- `pendiente` - `feat(application): handle rent vehicle edge cases`
+- `ccca10d` - `feat(application): handle rent vehicle edge cases`
 
 Cómo explicarlo:
 - "Primero escribí el test del flujo feliz de alquiler y después implementé solo los contratos y la orquestación mínima para pasarlo, manteniendo el dominio como único lugar de reglas."
