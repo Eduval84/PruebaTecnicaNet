@@ -7,6 +7,8 @@ namespace GtMotive.Estimate.Microservice.Domain
     /// </summary>
     public sealed class Vehicle
     {
+        private bool isRented;
+
         private Vehicle(string id, string model, ManufacturingDate manufacturingDate)
         {
             Id = id;
@@ -30,6 +32,11 @@ namespace GtMotive.Estimate.Microservice.Domain
         public ManufacturingDate ManufacturingDate { get; }
 
         /// <summary>
+        /// Gets a value indicating whether the vehicle is available.
+        /// </summary>
+        public bool IsAvailable => !isRented;
+
+        /// <summary>
         /// Creates a vehicle aggregate.
         /// </summary>
         /// <param name="id">Vehicle identifier.</param>
@@ -51,6 +58,32 @@ namespace GtMotive.Estimate.Microservice.Domain
             ArgumentNullException.ThrowIfNull(manufacturingDate);
 
             return new Vehicle(id, model, manufacturingDate);
+        }
+
+        /// <summary>
+        /// Marks the vehicle as rented.
+        /// </summary>
+        public void Rent()
+        {
+            if (isRented)
+            {
+                throw new DomainException("Vehicle is already rented.");
+            }
+
+            isRented = true;
+        }
+
+        /// <summary>
+        /// Marks the vehicle as returned.
+        /// </summary>
+        public void Return()
+        {
+            if (!isRented)
+            {
+                throw new DomainException("Vehicle is not currently rented.");
+            }
+
+            isRented = false;
         }
     }
 }
