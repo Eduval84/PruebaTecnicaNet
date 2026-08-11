@@ -490,7 +490,7 @@ Archivos relevantes:
 
 Historial de commits:
 - `4a4014d` - `test(api): add failing tests for rental presenter mappings`
-- `pendiente` - `feat(api): add rental presenters and controllers with consistent mappings`
+- `4e3f239` - `feat(api): add rental presenters and controllers with consistent mappings`
 
 Cómo explicarlo:
 - "En aplicación ya teníamos decisiones de negocio para no encontrados y casos inválidos; aquí trasladé ese resultado al contrato HTTP de forma estable y predecible: 200 para éxito, 404 para not found por puerto, y 400 para reglas de dominio por filtro global." 
