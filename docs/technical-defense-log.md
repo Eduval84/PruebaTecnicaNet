@@ -729,6 +729,28 @@ Cómo explicarlo:
 - "La frontera HTTP respeta el contrato de error de la aplicación: not found se traduce a 404 de forma consistente."
 - "El Presenter mantiene centralizado el mapeo de respuesta y el controller permanece delgado."
 
+### 16. Contrato HTTP 200 para Rent y Return en infraestructura
+
+Objetivo:
+- Verificar que los endpoints de alquiler y devolución responden `200 OK` con payload correcto cuando el caso de uso publica éxito.
+
+Decisión técnica:
+- Mantener pipeline real del TestServer (auth/authz + controllers + presenters).
+- Inyectar spies de `IUseCase<RentVehicleInput>` e `IUseCase<ReturnVehicleInput>` que llaman `StandardHandle` en sus presenters.
+- Validar estado HTTP, ejecución del caso de uso y presencia de `customerId`/`vehicleId` en body.
+
+Archivo relevante:
+- `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Specs/RentalSuccessInfrastructureTests.cs`
+
+Resultado:
+- Dos tests nuevos en verde:
+	- `POST /api/rentals/rent` -> `200 OK` con payload de éxito.
+	- `POST /api/rentals/return` -> `200 OK` con payload de éxito.
+
+Cómo explicarlo:
+- "Con estas pruebas cerramos el contrato HTTP tanto para error (404) como para éxito (200) en rent y return."
+- "El controller delega al caso de uso y el Presenter define la forma de respuesta, siguiendo la plantilla hexagonal."
+
 ## Estado Actual De Reglas
 
 - Fecha máxima de fabricación del vehículo: implementada y en verde.
