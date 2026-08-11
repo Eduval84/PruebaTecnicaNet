@@ -339,6 +339,9 @@ Archivos relevantes:
 Resultado:
 - Test funcional en verde validando que un vehículo creado por el caso de uso queda persistido y recuperable desde el repositorio en memoria.
 
+Historial de commits:
+- `77d60d1` - `feat(functional): add in-memory infrastructure and create vehicle integration test`
+
 Cómo explicarlo:
 - "Este test me permite demostrar integración de aplicación e infraestructura sin ruido del host web."
 - "Mantengo el entorno local sin dependencias externas, pero ya pruebo wiring real de DI y puertos."
@@ -360,6 +363,9 @@ Archivos relevantes:
 
 Resultado:
 - Test funcional en verde confirmando que el vehículo alquilado no aparece en el listado de disponibles.
+
+Historial de commits:
+- `67da1b6` - `test(functional): verify list available excludes rented vehicles`
 
 Cómo explicarlo:
 - "Este test prueba el flujo completo de aplicación contra la infraestructura en memoria sin levantar HTTP."
