@@ -1010,7 +1010,14 @@ Frases útiles para la entrevista:
 - Los endpoints de negocio quedan autenticados por defecto mediante `FallbackPolicy`.
 - Los tests de infraestructura prueban rechazo anónimo y acceso autenticado mediante esquema de prueba explícito.
 - Swagger queda expuesto para la demo por decisión consciente, separada de la protección de endpoints de negocio.
-- Riesgo residual aceptado para demo: `SwaggerExtensions` mantiene configuración OAuth heredada de la template y no se ha endurecido para un entorno productivo real.
+- Swagger OAuth se mantiene igual que la template original para demo, incluyendo `OAuthClientId` y `OAuthClientSecret` hardcodeados.
+
+### Incidencia Cerrada - Autenticación Swagger
+
+- Síntoma: redirección a error en Identity Server al pulsar `Authorize` desde Swagger UI.
+- Hallazgo: el comportamiento era heredado de la template original, con `OAuthClientSecret` hardcodeado en código y sin `PKCE` en `AuthorizationCode`.
+- Acción: mantener la configuración original sin cambios funcionales por decisión de demo.
+- Resultado: el comportamiento de Swagger OAuth queda alineado con la template base del ejercicio.
 
 ### Ejecutabilidad
 
