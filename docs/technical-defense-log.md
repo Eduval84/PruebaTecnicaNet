@@ -396,7 +396,7 @@ Archivos relevantes:
 - `test/unit/GtMotive.Estimate.Microservice.UnitTests/ApplicationCore/ReturnVehicleUseCaseTests.cs`
 
 Historial de commits:
-- `pendiente` - `feat(application): add return vehicle use case using template ports`
+- `c889efd` - `feat(application): add return vehicle use case using template ports`
 
 Cómo explicarlo:
 - "Primero dejé el test en rojo referenciando contratos que no existían todavía. Después implementé solo lo mínimo: input, output, puerto y caso de uso. Finalmente validé el verde con test filtrado."
@@ -409,7 +409,7 @@ Cómo explicarlo:
 - Caso de uso `CreateVehicle`: implementado y en verde.
 - Caso de uso `ListAvailableVehicles`: implementado y en verde.
 - Caso de uso `RentVehicle`: implementado y en verde.
-- Caso de uso `ReturnVehicle`: implementado y en verde (commit pendiente en esta iteración).
+- Caso de uso `ReturnVehicle`: implementado y en verde.
 
 ## Registro De Seguimiento
 
