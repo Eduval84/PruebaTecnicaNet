@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using GtMotive.Estimate.Microservice.ApplicationCore.UseCases;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +9,9 @@ namespace GtMotive.Estimate.Microservice.Api.UseCases
 {
     [ApiController]
     [Route("api/vehicles")]
-    public sealed class CreateVehicleController(IUseCase<CreateVehicleInput> createVehicleUseCase, CreateVehiclePresenter createVehiclePresenter) : ControllerBase
+    public sealed class CreateVehicleController(IMediator mediator) : ControllerBase
     {
-        private readonly IUseCase<CreateVehicleInput> createVehicleUseCase = createVehicleUseCase ?? throw new ArgumentNullException(nameof(createVehicleUseCase));
-        private readonly CreateVehiclePresenter createVehiclePresenter = createVehiclePresenter ?? throw new ArgumentNullException(nameof(createVehiclePresenter));
+        private readonly IMediator mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
         [HttpPost("create")]
         [ProducesResponseType(typeof(CreateVehicleOutput), StatusCodes.Status200OK)]
@@ -20,8 +20,8 @@ namespace GtMotive.Estimate.Microservice.Api.UseCases
         {
             ArgumentNullException.ThrowIfNull(request);
 
-            await createVehicleUseCase.Execute(new CreateVehicleInput(request.VehicleId, request.Model, request.ManufacturingDate));
-            return createVehiclePresenter.ActionResult;
+            var presenter = await mediator.Send(request);
+            return presenter.ActionResult;
         }
     }
 }

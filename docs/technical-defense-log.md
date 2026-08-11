@@ -852,6 +852,30 @@ Resultado:
 Cómo explicarlo:
 - "Para la demo prioricé accesibilidad de la documentación interactiva sin tocar la protección por defecto de los endpoints de negocio."
 
+### 22. MediatR explícito en CreateVehicle
+
+Objetivo:
+- Alinear el endpoint `CreateVehicle` con el patrón Controller -> MediatR Request -> Handler -> Use Case -> Presenter descrito por la template.
+
+Decisión técnica:
+- Convertir `CreateVehicleRequest` en un mensaje `IRequest<IWebApiPresenter>`.
+- Crear `CreateVehicleRequestHandler` para traducir el request HTTP al `CreateVehicleInput` del caso de uso.
+- Simplificar el controller para que solo envíe el request a `IMediator` y devuelva el presenter resultante.
+
+Archivos relevantes:
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/CreateVehicleRequest.cs`
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/CreateVehicleRequestHandler.cs`
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/CreateVehicleController.cs`
+- `test/unit/GtMotive.Estimate.Microservice.UnitTests/Api/UseCases/CreateVehicleRequestHandlerTests.cs`
+
+Resultado:
+- `CreateVehicle` ya sigue explícitamente el patrón MediatR de la template.
+- Validado en unit tests e infrastructure tests sin romper el contrato HTTP existente.
+
+Cómo explicarlo:
+- "El controller deja de conocer el caso de uso y delega el envío del mensaje en MediatR."
+- "El handler adapta el request web al input de aplicación y devuelve el presenter, manteniendo separadas las responsabilidades de cada capa."
+
 ## Estado Actual De Reglas
 
 - Fecha máxima de fabricación del vehículo: implementada y en verde.
