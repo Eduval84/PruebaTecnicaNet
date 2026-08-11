@@ -1,12 +1,16 @@
 ﻿using System.Reflection;
-using Acheve.AspNetCore.TestHost.Security;
-using Acheve.TestHost;
+using System.Security.Claims;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 using GtMotive.Estimate.Microservice.Api;
 using GtMotive.Estimate.Microservice.Infrastructure;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace GtMotive.Estimate.Microservice.InfrastructureTests.Infrastructure
 {
@@ -36,13 +40,42 @@ namespace GtMotive.Estimate.Microservice.InfrastructureTests.Infrastructure
         {
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Startup).GetTypeInfo().Assembly));
 
-            services.AddAuthentication(TestServerDefaults.AuthenticationScheme)
-                .AddTestServer();
+            services
+                .AddAuthentication(TestAuthenticationHandler.SchemeName)
+                .AddScheme<AuthenticationSchemeOptions, TestAuthenticationHandler>(
+                    TestAuthenticationHandler.SchemeName,
+                    _ => { });
+
+            services.AddAuthorization();
 
             services.AddControllers(ApiConfiguration.ConfigureControllers)
                 .WithApiControllers();
 
             services.AddBaseInfrastructure(true);
+        }
+
+        private sealed class TestAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+        {
+            public const string SchemeName = "Test";
+
+            public TestAuthenticationHandler(
+                IOptionsMonitor<AuthenticationSchemeOptions> options,
+                ILoggerFactory logger,
+                UrlEncoder encoder)
+                : base(options, logger, encoder)
+            {
+            }
+
+            protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+            {
+                var identity = new ClaimsIdentity(
+                    [new Claim(ClaimTypes.NameIdentifier, "integration-test-user")],
+                    SchemeName);
+                var principal = new ClaimsPrincipal(identity);
+                var ticket = new AuthenticationTicket(principal, SchemeName);
+
+                return Task.FromResult(AuthenticateResult.Success(ticket));
+            }
         }
     }
 }

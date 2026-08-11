@@ -643,6 +643,29 @@ Resultado final:
 Cómo explicarlo:
 - "Apliqué exactamente el mismo patrón Presenter que ya habíamos probado en rent/return. Para `CreateVehicle` marqué `ManufacturingDate` con `[JsonRequired]` para satisfacer la regla de SonarQube que requiere que value types usados como input de controladores sean explícitamente requeridos."
 
+### 12. Prueba de infraestructura HTTP respetando template (auth/authz + MediatR)
+
+Objetivo:
+- Validar la capa de infraestructura/host ejecutando un controller real con payload JSON y comprobando binding + ejecución de caso de uso mockeado.
+
+Decisión técnica:
+- Mantener `UseAuthentication()` y `UseAuthorization()` en el pipeline de `Startup` de tests.
+- Mantener registro de MediatR en la configuración de servicios para respetar la plantilla arquitectónica.
+- Sustituir dependencia antigua de test host por una versión compatible con .NET 9 para estabilizar la ejecución HTTP en pruebas.
+
+Archivos relevantes:
+- `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Infrastructure/Startup.cs`
+- `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/GtMotive.Estimate.Microservice.InfrastructureTests.csproj`
+- `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Specs/CreateVehicleRequestValidationInfrastructureTests.cs`
+- `Directory.Build.targets`
+
+Resultado:
+- `InfrastructureTests` en verde con ejecución real de controller y pipeline de autenticación/autorización activo.
+
+Cómo explicarlo:
+- "No quité seguridad del pipeline para hacer pasar tests; ajusté el test host a runtime actual y mantuve la plantilla intacta."
+- "El test verifica comportamiento HTTP y model binding en la frontera, sin mover reglas de negocio fuera de aplicación/dominio."
+
 ## Estado Actual De Reglas
 
 - Fecha máxima de fabricación del vehículo: implementada y en verde.

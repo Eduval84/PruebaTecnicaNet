@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Acheve.TestHost" />
+        <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="9.0.8" />
     </ItemGroup>
 
     <ItemGroup>
