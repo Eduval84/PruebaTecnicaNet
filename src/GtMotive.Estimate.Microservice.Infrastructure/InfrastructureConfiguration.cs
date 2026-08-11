@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using GtMotive.Estimate.Microservice.ApplicationCore.UseCases;
 using GtMotive.Estimate.Microservice.Domain.Interfaces;
+using GtMotive.Estimate.Microservice.Infrastructure.InMemory;
 using GtMotive.Estimate.Microservice.Infrastructure.Interfaces;
 using GtMotive.Estimate.Microservice.Infrastructure.Logging;
 using GtMotive.Estimate.Microservice.Infrastructure.Telemetry;
@@ -17,6 +19,11 @@ namespace GtMotive.Estimate.Microservice.Infrastructure
             this IServiceCollection services,
             bool isDevelopment)
         {
+            services.AddSingleton<InMemoryFleetStore>();
+            services.AddScoped<IVehicleRepository, InMemoryVehicleRepository>();
+            services.AddScoped<ICustomerRepository, InMemoryCustomerRepository>();
+            services.AddScoped<IUnitOfWork, InMemoryUnitOfWork>();
+
             services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
 
             if (!isDevelopment)

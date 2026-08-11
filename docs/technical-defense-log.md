@@ -318,6 +318,32 @@ Notas para explicar la implementación:
 Caso elegido:
 - Listar vehículos disponibles.
 
+### 6. Primer test funcional de integración (Application + Infrastructure)
+
+Objetivo:
+- Validar un flujo real de integración sin levantar el host HTTP, ejecutando el caso de uso con DI y persistencia en memoria.
+
+Decisión técnica:
+- Añadir implementaciones in-memory para `IVehicleRepository`, `ICustomerRepository` e `IUnitOfWork`.
+- Conectar estas implementaciones en `InfrastructureConfiguration`.
+- Crear un test funcional que ejecute `CreateVehicleUseCase` desde el composition root del proyecto funcional y valide persistencia.
+
+Archivos relevantes:
+- `src/GtMotive.Estimate.Microservice.Infrastructure/InMemory/InMemoryFleetStore.cs`
+- `src/GtMotive.Estimate.Microservice.Infrastructure/InMemory/InMemoryVehicleRepository.cs`
+- `src/GtMotive.Estimate.Microservice.Infrastructure/InMemory/InMemoryCustomerRepository.cs`
+- `src/GtMotive.Estimate.Microservice.Infrastructure/InMemory/InMemoryUnitOfWork.cs`
+- `src/GtMotive.Estimate.Microservice.Infrastructure/InfrastructureConfiguration.cs`
+- `test/functional/GtMotive.Estimate.Microservice.FunctionalTests/Specs/CreateVehicleFunctionalTests.cs`
+
+Resultado:
+- Test funcional en verde validando que un vehículo creado por el caso de uso queda persistido y recuperable desde el repositorio en memoria.
+
+Cómo explicarlo:
+- "Este test me permite demostrar integración de aplicación e infraestructura sin ruido del host web."
+- "Mantengo el entorno local sin dependencias externas, pero ya pruebo wiring real de DI y puertos."
+- "Es un paso intermedio entre unit tests puros y pruebas HTTP de extremo a extremo."
+
 Qué mostrar:
 - `IVehicleRepository` con `ListAvailable()`.
 - `ListAvailableVehiclesInput`.
