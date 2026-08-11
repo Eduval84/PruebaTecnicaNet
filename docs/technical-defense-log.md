@@ -995,3 +995,57 @@ Frases útiles para la entrevista:
 - "Evito el sobre-ingeniería introduciendo patrones solo cuando la regla de negocio los necesita."
 - "El Presenter mantiene el formateo de respuesta fuera del controlador, lo que preserva la separación de responsabilidades."
 - "La elección de base de datos local es intencional para que el evaluador pueda ejecutar el proyecto sin preparación extra."
+
+## Revisión Final
+
+### Arquitectura
+
+- Dominio centrado en invariantes reales de negocio: antigüedad máxima del vehículo y un solo alquiler activo por cliente.
+- ApplicationCore mantiene los casos de uso y puertos sin acoplarse a HTTP ni a persistencia concreta.
+- Infrastructure adapta repositorios, unit of work y arranque local con store en memoria para demo sin dependencias externas.
+- API usa controllers delgados, presenters para formateo y MediatR explícito en los cuatro endpoints.
+
+### Seguridad
+
+- Los endpoints de negocio quedan autenticados por defecto mediante `FallbackPolicy`.
+- Los tests de infraestructura prueban rechazo anónimo y acceso autenticado mediante esquema de prueba explícito.
+- Swagger queda expuesto para la demo por decisión consciente, separada de la protección de endpoints de negocio.
+- Riesgo residual aceptado para demo: `SwaggerExtensions` mantiene configuración OAuth heredada de la template y no se ha endurecido para un entorno productivo real.
+
+### Ejecutabilidad
+
+- `dotnet test src/microservice.sln --nologo` validado en verde.
+- `dotnet run --project src/GtMotive.Estimate.Microservice.Host` documentado para ejecución local en `Development`.
+- `docker compose up --build` preparado como alternativa de demo.
+
+## Guion Breve
+
+### Apertura
+
+1. "He implementado el microservicio siguiendo Clean Architecture y Hexagonal Architecture, manteniendo el dominio en el centro y creciendo con TDD."
+2. "La solución cubre los cuatro casos de uso: crear vehículo, listar disponibles, alquilar y devolver."
+
+### Recorrido recomendado
+
+1. Mostrar [README.md](README.md) para enseñar cómo ejecutar la demo en local.
+2. Abrir [src/GtMotive.Estimate.Microservice.Domain/ValueObjects/ManufacturingDate.cs](src/GtMotive.Estimate.Microservice.Domain/ValueObjects/ManufacturingDate.cs) y [src/GtMotive.Estimate.Microservice.Domain/Customer.cs](src/GtMotive.Estimate.Microservice.Domain/Customer.cs) para defender las invariantes.
+3. Abrir [src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases](src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases) para explicar casos de uso, puertos y unit of work.
+4. Abrir cualquier request handler en [src/GtMotive.Estimate.Microservice.Api/UseCases](src/GtMotive.Estimate.Microservice.Api/UseCases) para enseñar el patrón `Request -> Handler -> UseCase -> Presenter` con MediatR.
+5. Abrir [src/GtMotive.Estimate.Microservice.Infrastructure/InMemory](src/GtMotive.Estimate.Microservice.Infrastructure/InMemory) para justificar la ejecución local sin dependencias externas.
+6. Cerrar mostrando [docs/technical-defense-log.md](docs/technical-defense-log.md) como trazabilidad de decisiones y commits.
+
+### Mensajes clave
+
+1. "La arquitectura no es decorativa: cada capa protege una responsabilidad distinta."
+2. "El dominio contiene reglas; la aplicación orquesta; la infraestructura adapta; la API traduce el contrato HTTP."
+3. "Usé TDD para llegar desde reglas pequeñas a integración e infraestructura, dejando evidencia en tests y commits atómicos."
+
+## Checklist De Demo
+
+1. Ejecutar `dotnet test src/microservice.sln --nologo`.
+2. Ejecutar `dotnet run --project src/GtMotive.Estimate.Microservice.Host`.
+3. Abrir `http://localhost:5080/swagger`.
+4. Verificar que Swagger carga y que los endpoints responden autenticados según el flujo esperado de demo.
+5. Mostrar primero `CreateVehicle`, luego `ListAvailableVehicles`, después `RentVehicle` y finalmente `ReturnVehicle`.
+6. Tener abierto [docs/technical-defense-log.md](docs/technical-defense-log.md) para apoyar la explicación de decisiones.
+7. Tener preparado el mensaje de cierre: `38/38 tests en verde`, ejecución local sin dependencias externas y API alineada con la template.
