@@ -707,6 +707,28 @@ Cómo explicarlo:
 - "En esta prueba de infraestructura validamos el contrato HTTP del endpoint de listado sin acoplar el test a almacenamiento real."
 - "La respuesta se construye por el Presenter de la plantilla, manteniendo separación de responsabilidades."
 
+### 15. Contrato HTTP 404 para Rent y Return en infraestructura
+
+Objetivo:
+- Verificar que los endpoints de alquiler y devolución devuelven `404 NotFound` cuando el caso de uso informa recurso inexistente.
+
+Decisión técnica:
+- Mantener el pipeline de tests con autenticación/autorización activo.
+- Reemplazar `IUseCase<RentVehicleInput>` e `IUseCase<ReturnVehicleInput>` por spies que publican `NotFoundHandle` a través de sus presenters.
+- Validar código HTTP, ejecución del caso de uso y presencia del identificador esperado en el body de respuesta.
+
+Archivo relevante:
+- `test/infrastructure/GtMotive.Estimate.Microservice.InfrastructureTests/Specs/RentalNotFoundInfrastructureTests.cs`
+
+Resultado:
+- Dos tests nuevos en verde:
+	- `POST /api/rentals/rent` devuelve `404` cuando no existe customer.
+	- `POST /api/rentals/return` devuelve `404` cuando no existe vehicle.
+
+Cómo explicarlo:
+- "La frontera HTTP respeta el contrato de error de la aplicación: not found se traduce a 404 de forma consistente."
+- "El Presenter mantiene centralizado el mapeo de respuesta y el controller permanece delgado."
+
 ## Estado Actual De Reglas
 
 - Fecha máxima de fabricación del vehículo: implementada y en verde.
