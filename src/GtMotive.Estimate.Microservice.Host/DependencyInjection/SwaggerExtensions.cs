@@ -21,6 +21,8 @@ namespace GtMotive.Estimate.Microservice.Host.DependencyInjection
             AppSettings settings,
             IConfiguration configuration)
         {
+            var enableAuth = configuration.GetValue("Security:EnableAuth", defaultValue: true);
+
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(
                 options =>
@@ -32,7 +34,7 @@ namespace GtMotive.Estimate.Microservice.Host.DependencyInjection
                         Version = $"v{AssemblyVersion}",
                     });
 
-                    if (configuration.GetValue<string>("Swagger:EnableTryIt") == "Yes")
+                    if (configuration.GetValue<string>("Swagger:EnableTryIt") == "Yes" && enableAuth)
                     {
                         // Define the OAuth2.0 scheme that's in use (i.e. Implicit Flow)
                         options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -108,15 +110,21 @@ namespace GtMotive.Estimate.Microservice.Host.DependencyInjection
             app.UseSwaggerUI(
                 options =>
                 {
+                    var enableAuth = configuration.GetValue("Security:EnableAuth", defaultValue: true);
+
                     options.SwaggerEndpoint(url, $"{AssemblyName} API V{AssemblyVersion}");
 
-                    if (configuration.GetValue<string>("Swagger:EnableTryIt") == "No")
+                    if (configuration.GetValue<string>("Swagger:EnableTryIt") == "No" || !enableAuth)
                     {
                         options.SupportedSubmitMethods();
                     }
 
-                    options.OAuthClientId("client-gtestimate-swagger");
-                    options.OAuthClientSecret("gtmotive");
+                    if (enableAuth)
+                    {
+                        options.OAuthClientId("client-gtestimate-swagger");
+                        options.OAuthClientSecret("gtmotive");
+                    }
+
                     options.OAuthScopeSeparator(" ");
                 });
 

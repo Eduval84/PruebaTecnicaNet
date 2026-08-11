@@ -5,11 +5,13 @@ using Azure.Extensions.AspNetCore.Configuration.Secrets;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using GtMotive.Estimate.Microservice.Api;
+using GtMotive.Estimate.Microservice.Host.Authentication;
 using GtMotive.Estimate.Microservice.Host.Configuration;
 using GtMotive.Estimate.Microservice.Host.DependencyInjection;
 using GtMotive.Estimate.Microservice.Infrastructure;
 using GtMotive.Estimate.Microservice.Infrastructure.MongoDb.Settings;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -60,6 +62,7 @@ var appSettingsSection = builder.Configuration.GetSection("AppSettings");
 builder.Services.Configure<AppSettings>(appSettingsSection);
 var appSettings = appSettingsSection.Get<AppSettings>();
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDb"));
+var enableAuth = builder.Configuration.GetValue("Security:EnableAuth", defaultValue: true);
 
 builder.Services.AddControllers(ApiConfiguration.ConfigureControllers)
     .WithApiControllers();
@@ -80,16 +83,28 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        options.Authority = appSettings.JwtAuthority;
-        options.Audience = "estimate-api";
-    });
+if (enableAuth)
+{
+    builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.Authority = appSettings.JwtAuthority;
+            options.Audience = "estimate-api";
+        });
+}
+else
+{
+    builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = DemoAuthenticationHandler.SchemeName;
+            options.DefaultChallengeScheme = DemoAuthenticationHandler.SchemeName;
+        })
+        .AddScheme<AuthenticationSchemeOptions, DemoAuthenticationHandler>(DemoAuthenticationHandler.SchemeName, _ => { });
+}
 
 builder.Services.AddSwagger(appSettings, builder.Configuration);
 
@@ -135,8 +150,13 @@ if (app.Environment.IsDevelopment())
 app.UseSwaggerInApplication(pathBase, builder.Configuration);
 
 app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
+
+if (enableAuth)
+{
+    app.UseAuthentication();
+    app.UseAuthorization();
+}
+
 app.MapControllers();
 
 await app.RunAsync();
