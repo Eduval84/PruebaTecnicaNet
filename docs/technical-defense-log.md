@@ -412,7 +412,7 @@ Archivos relevantes:
 Historial de commits:
 - `c889efd` - `feat(application): add return vehicle use case using template ports`
 - `56fdf00` - `test(application): add failing tests for return vehicle edge cases`
-- `pendiente` - `feat(application): handle return vehicle edge cases`
+- `374c2b4` - `feat(application): handle return vehicle edge cases`
 
 Cómo explicarlo:
 - "Primero dejé el test en rojo referenciando contratos que no existían todavía. Después implementé solo lo mínimo: input, output, puerto y caso de uso. Finalmente validé el verde con test filtrado."
