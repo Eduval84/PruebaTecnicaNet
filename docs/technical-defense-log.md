@@ -335,8 +335,8 @@ Mensaje clave:
 - Coherencia de patrón: mismo contrato, diferente intención de negocio.
 
 Historial de commits:
-- `test(application): add failing test for listing available vehicles`
-- `feat(application): add list available vehicles use case using template contracts`
+- `bcac50d` - `test(application): add failing test for listing available vehicles`
+- `3e5cc7d` - `feat(application): add list available vehicles use case using template contracts`
 
 Checklist de navegación:
 
@@ -346,7 +346,76 @@ Checklist de navegación:
 4. Abrir `test/unit/GtMotive.Estimate.Microservice.UnitTests/ApplicationCore/ListAvailableVehiclesUseCaseTests.cs`.
 5. Enseñar el test verde y remarcar que no dependemos todavía de infraestructura concreta.
 
-### 6. Limpieza del entorno
+### 6. Tercer caso de uso de la aplicación
+
+Caso elegido:
+- Alquilar vehículo.
+
+Qué mostrar:
+- `RentVehicleInput`.
+- `RentVehicleUseCase`.
+- `IRentVehicleOutputPort`.
+- `RentVehicleOutput`.
+- `RentVehicleUseCaseTests`.
+
+Qué decir:
+- "Mantengo exactamente los mismos contratos de plantilla para que cada caso de uso sea predecible y fácil de defender."
+- "El caso de uso valida existencia de cliente y vehículo a través de puertos, luego delega el cambio de estado al dominio."
+- "La operación de alquiler no se resuelve en el controlador ni en MediatR; se resuelve en aplicación más dominio."
+- "Persisto ambos agregados y confirmo transacción con unit of work antes de emitir el output." 
+
+Mensaje clave:
+- Mismo patrón arquitectónico, distinta acción de negocio, misma disciplina TDD.
+
+Archivos relevantes:
+- `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases/ICustomerRepository.cs`
+- `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases/RentVehicleInput.cs`
+- `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases/RentVehicleOutput.cs`
+- `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases/IRentVehicleOutputPort.cs`
+- `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases/RentVehicleUseCase.cs`
+- `test/unit/GtMotive.Estimate.Microservice.UnitTests/ApplicationCore/RentVehicleUseCaseTests.cs`
+
+Historial de commits:
+- `9ab5f0f` - `feat(application): add rent vehicle use case with template ports`
+
+Cómo explicarlo:
+- "Primero escribí el test del flujo feliz de alquiler y después implementé solo los contratos y la orquestación mínima para pasarlo, manteniendo el dominio como único lugar de reglas."
+
+### 7. Cuarto caso de uso de la aplicación
+
+Caso elegido:
+- Devolver vehículo.
+
+Qué mostrar:
+- `ReturnVehicleInput`.
+- `ReturnVehicleUseCase`.
+- `IReturnVehicleOutputPort`.
+- `ReturnVehicleOutput`.
+- `ReturnVehicleUseCaseTests`.
+
+Qué decir:
+- "Mantengo el mismo esqueleto del resto de casos de uso para no romper consistencia arquitectónica."
+- "La aplicación orquesta la devolución, pero las transiciones válidas del estado siguen en dominio."
+- "El flujo busca cliente y vehículo, ejecuta `EndRental()` y `Return()`, persiste cambios y responde por output port."
+- "Si no existe cliente o vehículo, corto el flujo por `NotFoundHandle` sin tocar estado."
+
+Mensaje clave:
+- Misma plantilla de aplicación, nueva intención de negocio, misma disciplina TDD.
+
+Archivos relevantes:
+- `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases/ReturnVehicleInput.cs`
+- `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases/ReturnVehicleOutput.cs`
+- `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases/IReturnVehicleOutputPort.cs`
+- `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases/ReturnVehicleUseCase.cs`
+- `test/unit/GtMotive.Estimate.Microservice.UnitTests/ApplicationCore/ReturnVehicleUseCaseTests.cs`
+
+Historial de commits:
+- `c889efd` - `feat(application): add return vehicle use case using template ports`
+
+Cómo explicarlo:
+- "Primero dejé el test en rojo referenciando contratos que no existían todavía. Después implementé solo lo mínimo: input, output, puerto y caso de uso. Finalmente validé el verde con test filtrado."
+
+### 8. Limpieza del entorno
 
 Objetivo:
 - Mantener las ejecuciones TDD locales estables y reproducibles.
@@ -366,40 +435,6 @@ Historial de commits:
 
 Cómo explicarlo:
 - "Solo corregí el entorno para eliminar fricción del ciclo TDD. El objetivo es mantener el foco en el comportamiento de negocio, no en problemas de tooling."
-
-### 7. Tercer caso de uso de la aplicación
-
-Caso elegido:
-- Devolver vehículo.
-
-Qué mostrar:
-- `ReturnVehicleInput`.
-- `ReturnVehicleUseCase`.
-- `IReturnVehicleOutputPort`.
-- `ReturnVehicleOutput`.
-- `ReturnVehicleUseCaseTests`.
-
-Qué decir:
-- "Mantengo el mismo esqueleto del resto de casos de uso para no romper consistencia arquitectónica."
-- "La aplicación orquesta la devolución, pero las transiciones válidas del estado siguen en dominio."
-- "El flujo busca cliente y vehículo, ejecuta `EndRental()` y `Return()`, persiste cambios y responde por output port."
-- "Si no existe cliente o vehículo, corto el flujo por `NotFoundHandle` sin tocar estado." 
-
-Mensaje clave:
-- Misma plantilla de aplicación, nueva intención de negocio, misma disciplina TDD.
-
-Archivos relevantes:
-- `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases/ReturnVehicleInput.cs`
-- `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases/ReturnVehicleOutput.cs`
-- `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases/IReturnVehicleOutputPort.cs`
-- `src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases/ReturnVehicleUseCase.cs`
-- `test/unit/GtMotive.Estimate.Microservice.UnitTests/ApplicationCore/ReturnVehicleUseCaseTests.cs`
-
-Historial de commits:
-- `c889efd` - `feat(application): add return vehicle use case using template ports`
-
-Cómo explicarlo:
-- "Primero dejé el test en rojo referenciando contratos que no existían todavía. Después implementé solo lo mínimo: input, output, puerto y caso de uso. Finalmente validé el verde con test filtrado."
 
 ## Estado Actual De Reglas
 
