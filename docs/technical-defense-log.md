@@ -464,6 +464,37 @@ Historial de commits:
 Cómo explicarlo:
 - "Solo corregí el entorno para eliminar fricción del ciclo TDD. El objetivo es mantener el foco en el comportamiento de negocio, no en problemas de tooling."
 
+### 9. Mapeo API consistente para alquiler y devolución
+
+Objetivo:
+- Llevar los edge cases de `RentVehicle` y `ReturnVehicle` a la frontera HTTP con respuestas consistentes.
+
+Qué se implementó:
+- Presenters dedicados para rent y return con mapeo uniforme:
+	- `StandardHandle` -> `200 OK` con output del caso de uso.
+	- `NotFoundHandle` -> `404 Not Found` con `ProblemDetails`.
+- Controladores separados por responsabilidad (`RentVehicleController` y `ReturnVehicleController`) para evitar mezcla de responsabilidades.
+- Registro en DI de casos de uso y presenters para resolver puertos de salida en tiempo de ejecución.
+- Mantenimiento del filtro global `BusinessExceptionFilter` para mapear `DomainException` a `400 Bad Request`.
+
+Archivos relevantes:
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/RentVehiclePresenter.cs`
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/ReturnVehiclePresenter.cs`
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/RentVehicleController.cs`
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/ReturnVehicleController.cs`
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/RentVehicleRequest.cs`
+- `src/GtMotive.Estimate.Microservice.Api/UseCases/ReturnVehicleRequest.cs`
+- `src/GtMotive.Estimate.Microservice.Api/DependencyInjection/UserInterfaceExtensions.cs`
+- `src/GtMotive.Estimate.Microservice.ApplicationCore/ApplicationConfiguration.cs`
+- `test/unit/GtMotive.Estimate.Microservice.UnitTests/Api/UseCases/RentalPresentersTests.cs`
+
+Historial de commits:
+- `4a4014d` - `test(api): add failing tests for rental presenter mappings`
+- `pendiente` - `feat(api): add rental presenters and controllers with consistent mappings`
+
+Cómo explicarlo:
+- "En aplicación ya teníamos decisiones de negocio para no encontrados y casos inválidos; aquí trasladé ese resultado al contrato HTTP de forma estable y predecible: 200 para éxito, 404 para not found por puerto, y 400 para reglas de dominio por filtro global." 
+
 ## Estado Actual De Reglas
 
 - Fecha máxima de fabricación del vehículo: implementada y en verde.
