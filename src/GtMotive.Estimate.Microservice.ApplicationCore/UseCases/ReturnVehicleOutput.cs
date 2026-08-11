@@ -3,27 +3,22 @@ namespace GtMotive.Estimate.Microservice.ApplicationCore.UseCases
     /// <summary>
     /// Output for returning a vehicle.
     /// </summary>
-    public sealed class ReturnVehicleOutput : IUseCaseOutput
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="ReturnVehicleOutput"/> class.
+    /// </remarks>
+    /// <param name="customerId">Customer identifier.</param>
+    /// <param name="vehicleId">Vehicle identifier.</param>
+    public sealed class ReturnVehicleOutput(string customerId, string vehicleId) : IUseCaseOutput
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ReturnVehicleOutput"/> class.
-        /// </summary>
-        /// <param name="customerId">Customer identifier.</param>
-        /// <param name="vehicleId">Vehicle identifier.</param>
-        public ReturnVehicleOutput(string customerId, string vehicleId)
-        {
-            CustomerId = customerId;
-            VehicleId = vehicleId;
-        }
 
         /// <summary>
         /// Gets the customer identifier.
         /// </summary>
-        public string CustomerId { get; }
+        public string CustomerId { get; } = customerId;
 
         /// <summary>
         /// Gets the vehicle identifier.
         /// </summary>
-        public string VehicleId { get; }
+        public string VehicleId { get; } = vehicleId;
     }
 }

@@ -6,20 +6,16 @@ namespace GtMotive.Estimate.Microservice.ApplicationCore.UseCases
     /// <summary>
     /// Output for listing available vehicles.
     /// </summary>
-    public sealed class ListAvailableVehiclesOutput : IUseCaseOutput
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="ListAvailableVehiclesOutput"/> class.
+    /// </remarks>
+    /// <param name="vehicles">Available vehicles.</param>
+    public sealed class ListAvailableVehiclesOutput(IReadOnlyCollection<ListAvailableVehiclesOutputItem> vehicles) : IUseCaseOutput
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ListAvailableVehiclesOutput"/> class.
-        /// </summary>
-        /// <param name="vehicles">Available vehicles.</param>
-        public ListAvailableVehiclesOutput(IReadOnlyCollection<ListAvailableVehiclesOutputItem> vehicles)
-        {
-            Vehicles = vehicles ?? throw new ArgumentNullException(nameof(vehicles));
-        }
 
         /// <summary>
         /// Gets the available vehicles.
         /// </summary>
-        public IReadOnlyCollection<ListAvailableVehiclesOutputItem> Vehicles { get; }
+        public IReadOnlyCollection<ListAvailableVehiclesOutputItem> Vehicles { get; } = vehicles ?? throw new ArgumentNullException(nameof(vehicles));
     }
 }

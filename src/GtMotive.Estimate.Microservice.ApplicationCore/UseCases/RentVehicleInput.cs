@@ -3,27 +3,22 @@ namespace GtMotive.Estimate.Microservice.ApplicationCore.UseCases
     /// <summary>
     /// Input for renting a vehicle.
     /// </summary>
-    public sealed class RentVehicleInput : IUseCaseInput
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="RentVehicleInput"/> class.
+    /// </remarks>
+    /// <param name="customerId">Customer identifier.</param>
+    /// <param name="vehicleId">Vehicle identifier.</param>
+    public sealed class RentVehicleInput(string customerId, string vehicleId) : IUseCaseInput
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RentVehicleInput"/> class.
-        /// </summary>
-        /// <param name="customerId">Customer identifier.</param>
-        /// <param name="vehicleId">Vehicle identifier.</param>
-        public RentVehicleInput(string customerId, string vehicleId)
-        {
-            CustomerId = customerId;
-            VehicleId = vehicleId;
-        }
 
         /// <summary>
         /// Gets the customer identifier.
         /// </summary>
-        public string CustomerId { get; }
+        public string CustomerId { get; } = customerId;
 
         /// <summary>
         /// Gets the vehicle identifier.
         /// </summary>
-        public string VehicleId { get; }
+        public string VehicleId { get; } = vehicleId;
     }
 }

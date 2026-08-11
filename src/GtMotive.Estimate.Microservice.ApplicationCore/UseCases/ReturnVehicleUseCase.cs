@@ -7,27 +7,19 @@ namespace GtMotive.Estimate.Microservice.ApplicationCore.UseCases
     /// <summary>
     /// Returns a rented vehicle.
     /// </summary>
-    public sealed class ReturnVehicleUseCase : IUseCase<ReturnVehicleInput>
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="ReturnVehicleUseCase"/> class.
+    /// </remarks>
+    /// <param name="customerRepository">Customer repository.</param>
+    /// <param name="vehicleRepository">Vehicle repository.</param>
+    /// <param name="unitOfWork">Unit of work.</param>
+    /// <param name="outputPort">Output port.</param>
+    public sealed class ReturnVehicleUseCase(ICustomerRepository customerRepository, IVehicleRepository vehicleRepository, IUnitOfWork unitOfWork, IReturnVehicleOutputPort outputPort) : IUseCase<ReturnVehicleInput>
     {
-        private readonly ICustomerRepository customerRepository;
-        private readonly IVehicleRepository vehicleRepository;
-        private readonly IUnitOfWork unitOfWork;
-        private readonly IReturnVehicleOutputPort outputPort;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ReturnVehicleUseCase"/> class.
-        /// </summary>
-        /// <param name="customerRepository">Customer repository.</param>
-        /// <param name="vehicleRepository">Vehicle repository.</param>
-        /// <param name="unitOfWork">Unit of work.</param>
-        /// <param name="outputPort">Output port.</param>
-        public ReturnVehicleUseCase(ICustomerRepository customerRepository, IVehicleRepository vehicleRepository, IUnitOfWork unitOfWork, IReturnVehicleOutputPort outputPort)
-        {
-            this.customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
-            this.vehicleRepository = vehicleRepository ?? throw new ArgumentNullException(nameof(vehicleRepository));
-            this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-            this.outputPort = outputPort ?? throw new ArgumentNullException(nameof(outputPort));
-        }
+        private readonly ICustomerRepository customerRepository = customerRepository ?? throw new ArgumentNullException(nameof(customerRepository));
+        private readonly IVehicleRepository vehicleRepository = vehicleRepository ?? throw new ArgumentNullException(nameof(vehicleRepository));
+        private readonly IUnitOfWork unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        private readonly IReturnVehicleOutputPort outputPort = outputPort ?? throw new ArgumentNullException(nameof(outputPort));
 
         /// <inheritdoc />
         public async Task Execute(ReturnVehicleInput input)

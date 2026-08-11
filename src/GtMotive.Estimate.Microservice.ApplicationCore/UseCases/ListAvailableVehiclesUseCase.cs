@@ -7,21 +7,15 @@ namespace GtMotive.Estimate.Microservice.ApplicationCore.UseCases
     /// <summary>
     /// Lists available vehicles from the fleet.
     /// </summary>
-    public sealed class ListAvailableVehiclesUseCase : IUseCase<ListAvailableVehiclesInput>
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="ListAvailableVehiclesUseCase"/> class.
+    /// </remarks>
+    /// <param name="vehicleRepository">Vehicle repository.</param>
+    /// <param name="outputPort">Output port.</param>
+    public sealed class ListAvailableVehiclesUseCase(IVehicleRepository vehicleRepository, IListAvailableVehiclesOutputPort outputPort) : IUseCase<ListAvailableVehiclesInput>
     {
-        private readonly IVehicleRepository vehicleRepository;
-        private readonly IListAvailableVehiclesOutputPort outputPort;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ListAvailableVehiclesUseCase"/> class.
-        /// </summary>
-        /// <param name="vehicleRepository">Vehicle repository.</param>
-        /// <param name="outputPort">Output port.</param>
-        public ListAvailableVehiclesUseCase(IVehicleRepository vehicleRepository, IListAvailableVehiclesOutputPort outputPort)
-        {
-            this.vehicleRepository = vehicleRepository ?? throw new ArgumentNullException(nameof(vehicleRepository));
-            this.outputPort = outputPort ?? throw new ArgumentNullException(nameof(outputPort));
-        }
+        private readonly IVehicleRepository vehicleRepository = vehicleRepository ?? throw new ArgumentNullException(nameof(vehicleRepository));
+        private readonly IListAvailableVehiclesOutputPort outputPort = outputPort ?? throw new ArgumentNullException(nameof(outputPort));
 
         /// <inheritdoc />
         public async Task Execute(ListAvailableVehiclesInput input)

@@ -8,24 +8,17 @@ namespace GtMotive.Estimate.Microservice.ApplicationCore.UseCases
     /// <summary>
     /// Creates a new vehicle in the fleet.
     /// </summary>
-    public sealed class CreateVehicleUseCase : IUseCase<CreateVehicleInput>
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="CreateVehicleUseCase"/> class.
+    /// </remarks>
+    /// <param name="vehicleRepository">Vehicle repository.</param>
+    /// <param name="unitOfWork">Unit of work.</param>
+    /// <param name="outputPort">Output port.</param>
+    public sealed class CreateVehicleUseCase(IVehicleRepository vehicleRepository, IUnitOfWork unitOfWork, ICreateVehicleOutputPort outputPort) : IUseCase<CreateVehicleInput>
     {
-        private readonly IVehicleRepository vehicleRepository;
-        private readonly IUnitOfWork unitOfWork;
-        private readonly ICreateVehicleOutputPort outputPort;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CreateVehicleUseCase"/> class.
-        /// </summary>
-        /// <param name="vehicleRepository">Vehicle repository.</param>
-        /// <param name="unitOfWork">Unit of work.</param>
-        /// <param name="outputPort">Output port.</param>
-        public CreateVehicleUseCase(IVehicleRepository vehicleRepository, IUnitOfWork unitOfWork, ICreateVehicleOutputPort outputPort)
-        {
-            this.vehicleRepository = vehicleRepository ?? throw new ArgumentNullException(nameof(vehicleRepository));
-            this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-            this.outputPort = outputPort ?? throw new ArgumentNullException(nameof(outputPort));
-        }
+        private readonly IVehicleRepository vehicleRepository = vehicleRepository ?? throw new ArgumentNullException(nameof(vehicleRepository));
+        private readonly IUnitOfWork unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        private readonly ICreateVehicleOutputPort outputPort = outputPort ?? throw new ArgumentNullException(nameof(outputPort));
 
         /// <inheritdoc />
         public async Task Execute(CreateVehicleInput input)

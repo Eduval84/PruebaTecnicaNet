@@ -5,34 +5,28 @@ namespace GtMotive.Estimate.Microservice.ApplicationCore.UseCases
     /// <summary>
     /// Input for the create vehicle use case.
     /// </summary>
-    public sealed class CreateVehicleInput : IUseCaseInput
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="CreateVehicleInput"/> class.
+    /// </remarks>
+    /// <param name="vehicleId">Vehicle identifier.</param>
+    /// <param name="model">Vehicle model.</param>
+    /// <param name="manufacturingDate">Manufacturing date.</param>
+    public sealed class CreateVehicleInput(string vehicleId, string model, DateOnly manufacturingDate) : IUseCaseInput
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CreateVehicleInput"/> class.
-        /// </summary>
-        /// <param name="vehicleId">Vehicle identifier.</param>
-        /// <param name="model">Vehicle model.</param>
-        /// <param name="manufacturingDate">Manufacturing date.</param>
-        public CreateVehicleInput(string vehicleId, string model, DateOnly manufacturingDate)
-        {
-            VehicleId = vehicleId;
-            Model = model;
-            ManufacturingDate = manufacturingDate;
-        }
 
         /// <summary>
         /// Gets the vehicle identifier.
         /// </summary>
-        public string VehicleId { get; }
+        public string VehicleId { get; } = vehicleId;
 
         /// <summary>
         /// Gets the vehicle model.
         /// </summary>
-        public string Model { get; }
+        public string Model { get; } = model;
 
         /// <summary>
         /// Gets the manufacturing date.
         /// </summary>
-        public DateOnly ManufacturingDate { get; }
+        public DateOnly ManufacturingDate { get; } = manufacturingDate;
     }
 }
