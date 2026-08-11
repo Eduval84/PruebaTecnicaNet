@@ -411,9 +411,23 @@ Archivos relevantes:
 
 Historial de commits:
 - `c889efd` - `feat(application): add return vehicle use case using template ports`
+- `56fdf00` - `test(application): add failing tests for return vehicle edge cases`
+- `pendiente` - `feat(application): handle return vehicle edge cases`
 
 Cómo explicarlo:
 - "Primero dejé el test en rojo referenciando contratos que no existían todavía. Después implementé solo lo mínimo: input, output, puerto y caso de uso. Finalmente validé el verde con test filtrado."
+
+Cobertura de edge cases (TDD):
+
+- Customer no existe: se corta el flujo con `NotFoundHandle` y no se consulta vehículo.
+- Vehicle no existe: se responde `NotFoundHandle` específico de devolución y no hay persistencia.
+- Devolución inválida (vehículo no alquilado): se responde `NotFoundHandle` y no se altera estado ni se persiste.
+
+Qué cambió en implementación:
+
+- Se movió la consulta de vehículo después de validar customer.
+- Se ajustó el mensaje de not found para el caso de devolución.
+- Se añadió guard clause para evitar `Return()` cuando `vehicle.IsAvailable`.
 
 ### 8. Limpieza del entorno
 
