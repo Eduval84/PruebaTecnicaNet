@@ -1040,6 +1040,16 @@ Frases útiles para la entrevista:
 2. "El dominio contiene reglas; la aplicación orquesta; la infraestructura adapta; la API traduce el contrato HTTP."
 3. "Usé TDD para llegar desde reglas pequeñas a integración e infraestructura, dejando evidencia en tests y commits atómicos."
 
+## Resumen Oral 2-3 Minutos
+
+"He implementado este microservicio siguiendo Clean Architecture y Arquitectura Hexagonal, manteniendo el dominio en el centro y creciendo siempre mediante TDD. Empecé por las reglas de negocio más pequeñas, como la restricción de antigüedad máxima del vehículo y la limitación de un único alquiler activo por cliente, y desde ahí fui evolucionando hacia casos de uso, integración e infraestructura.
+
+En dominio he mantenido el modelo pequeño y expresivo, usando value objects y agregados solo donde aportaban protección real de invariantes. En aplicación, los casos de uso orquestan el flujo sin mezclar lógica HTTP ni detalles de persistencia. En infraestructura he dejado una implementación en memoria para que cualquier persona pueda ejecutar la solución en local sin depender de MongoDB ni otros servicios externos.
+
+En la capa API he seguido el patrón Presenter para separar el formateo de la respuesta y, además, he alineado la frontera HTTP con la template usando MediatR de forma explícita. Ahora los cuatro endpoints entran por Request, pasan por Handler, ejecutan el Use Case y devuelven un Presenter, que era uno de los puntos importantes de la plantilla base.
+
+También he protegido los endpoints por defecto mediante autenticación, aunque para la demo mantengo Swagger expuesto porque simplifica la presentación funcional. El resultado final es una solución ejecutable en local, con 38 de 38 tests en verde, commits atómicos trazables y un documento de defensa que explica cada decisión técnica relevante."
+
 ## Checklist De Demo
 
 1. Ejecutar `dotnet test src/microservice.sln --nologo`.
