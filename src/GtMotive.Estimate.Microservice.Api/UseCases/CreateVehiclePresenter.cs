@@ -1,0 +1,16 @@
+using GtMotive.Estimate.Microservice.ApplicationCore.UseCases;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GtMotive.Estimate.Microservice.Api.UseCases
+{
+    public sealed class CreateVehiclePresenter : ICreateVehicleOutputPort, IWebApiPresenter
+    {
+        public IActionResult ActionResult { get; private set; } = new StatusCodeResult(StatusCodes.Status500InternalServerError);
+
+        public void StandardHandle(CreateVehicleOutput useCaseOutput)
+        {
+            ActionResult = new OkObjectResult(useCaseOutput);
+        }
+    }
+}

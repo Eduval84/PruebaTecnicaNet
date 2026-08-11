@@ -14,6 +14,12 @@ namespace GtMotive.Estimate.Microservice.Api.DependencyInjection
             services.AddScoped<ReturnVehiclePresenter>();
             services.AddScoped<IReturnVehicleOutputPort>(sp => sp.GetRequiredService<ReturnVehiclePresenter>());
 
+            services.AddScoped<CreateVehiclePresenter>();
+            services.AddScoped<ICreateVehicleOutputPort>(sp => sp.GetRequiredService<CreateVehiclePresenter>());
+
+            services.AddScoped<ListAvailableVehiclesPresenter>();
+            services.AddScoped<IListAvailableVehiclesOutputPort>(sp => sp.GetRequiredService<ListAvailableVehiclesPresenter>());
+
             return services;
         }
     }
