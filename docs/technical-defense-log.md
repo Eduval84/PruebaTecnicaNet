@@ -1035,12 +1035,18 @@ Frases útiles para la entrevista:
 
 ### Recorrido recomendado
 
-1. Mostrar [README.md](README.md) para enseñar cómo ejecutar la demo en local.
-2. Abrir [src/GtMotive.Estimate.Microservice.Domain/ValueObjects/ManufacturingDate.cs](src/GtMotive.Estimate.Microservice.Domain/ValueObjects/ManufacturingDate.cs) y [src/GtMotive.Estimate.Microservice.Domain/Customer.cs](src/GtMotive.Estimate.Microservice.Domain/Customer.cs) para defender las invariantes.
-3. Abrir [src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases](src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases) para explicar casos de uso, puertos y unit of work.
-4. Abrir cualquier request handler en [src/GtMotive.Estimate.Microservice.Api/UseCases](src/GtMotive.Estimate.Microservice.Api/UseCases) para enseñar el patrón `Request -> Handler -> UseCase -> Presenter` con MediatR.
-5. Abrir [src/GtMotive.Estimate.Microservice.Infrastructure/InMemory](src/GtMotive.Estimate.Microservice.Infrastructure/InMemory) para justificar la ejecución local sin dependencias externas.
-6. Cerrar mostrando [docs/technical-defense-log.md](docs/technical-defense-log.md) como trazabilidad de decisiones y commits.
+1. Mostrar [README.md](README.md) para enseñar cómo ejecutar la demo en local y qué flujo funcional se va a recorrer.
+2. Abrir [src/GtMotive.Estimate.Microservice.Domain/ValueObjects/ManufacturingDate.cs](src/GtMotive.Estimate.Microservice.Domain/ValueObjects/ManufacturingDate.cs) y defender esta invariante: "no se puede crear un vehículo con más de 5 años".
+3. Abrir [src/GtMotive.Estimate.Microservice.Domain/Customer.cs](src/GtMotive.Estimate.Microservice.Domain/Customer.cs) y defender la segunda invariante: "un cliente no puede tener más de un alquiler activo" y "al devolver, vuelve a poder alquilar".
+4. Explicar por qué esas reglas viven en dominio: son decisiones de negocio, no de infraestructura ni de transporte HTTP, por eso se validan con `DomainException` en el centro del modelo.
+5. Abrir [src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases](src/GtMotive.Estimate.Microservice.ApplicationCore/UseCases) y explicar que Application Core no contiene detalles técnicos, sino orquestación de casos de uso.
+6. Dentro de esa carpeta, enseñar brevemente tres piezas:
+	- `IUseCase<TInput>`: contrato de ejecución del caso de uso.
+	- Puertos de entrada/salida (`*Input`, `*Output`, `*OutputPort`): frontera de aplicación desacoplada de API e infraestructura.
+	- `IUnitOfWork`: confirmación transaccional al final de operaciones de escritura.
+7. Abrir [src/GtMotive.Estimate.Microservice.Api/UseCases/RentVehicleRequestHandler.cs](src/GtMotive.Estimate.Microservice.Api/UseCases/RentVehicleRequestHandler.cs) como ejemplo concreto de handler y explicar el flujo completo: `Request HTTP -> MediatR Request -> Handler -> UseCase -> Presenter -> IActionResult`.
+8. Abrir [src/GtMotive.Estimate.Microservice.Infrastructure/InMemory](src/GtMotive.Estimate.Microservice.Infrastructure/InMemory) para justificar la demo sin dependencias externas y comentar que se mantiene el mismo contrato de repositorios/puertos.
+9. Cerrar mostrando [docs/technical-defense-log.md](docs/technical-defense-log.md) como evidencia de decisiones, TDD y commits atómicos.
 
 ### Mensajes clave
 
