@@ -377,9 +377,23 @@ Archivos relevantes:
 
 Historial de commits:
 - `9ab5f0f` - `feat(application): add rent vehicle use case with template ports`
+- `5501412` - `test(application): add failing tests for rent vehicle edge cases`
+- `pendiente` - `feat(application): handle rent vehicle edge cases`
 
 Cómo explicarlo:
 - "Primero escribí el test del flujo feliz de alquiler y después implementé solo los contratos y la orquestación mínima para pasarlo, manteniendo el dominio como único lugar de reglas."
+
+Cobertura de edge cases (TDD):
+
+- Customer no existe: se corta el flujo con `NotFoundHandle` y no se consulta vehículo.
+- Vehicle no existe: se responde `NotFoundHandle` específico de alquiler y no hay persistencia.
+- Alquiler inválido (vehículo no disponible): se responde `NotFoundHandle` y no se altera estado ni se persiste.
+
+Qué cambió en implementación:
+
+- Se movió la consulta de vehículo después de validar customer.
+- Se ajustó el mensaje de not found para el caso de alquiler.
+- Se añadió guard clause para evitar `Rent()` cuando `vehicle.IsAvailable` es `false`.
 
 ### 7. Cuarto caso de uso de la aplicación
 

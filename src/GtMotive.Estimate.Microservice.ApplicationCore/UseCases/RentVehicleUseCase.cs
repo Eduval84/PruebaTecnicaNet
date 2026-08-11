@@ -35,7 +35,6 @@ namespace GtMotive.Estimate.Microservice.ApplicationCore.UseCases
             ArgumentNullException.ThrowIfNull(input);
 
             var customer = await customerRepository.GetById(input.CustomerId);
-            var vehicle = await vehicleRepository.GetById(input.VehicleId);
 
             if (customer is null)
             {
@@ -43,9 +42,17 @@ namespace GtMotive.Estimate.Microservice.ApplicationCore.UseCases
                 return;
             }
 
+            var vehicle = await vehicleRepository.GetById(input.VehicleId);
+
             if (vehicle is null)
             {
-                outputPort.NotFoundHandle($"Vehicle '{input.VehicleId}' was not found.");
+                outputPort.NotFoundHandle($"Vehicle '{input.VehicleId}' was not found for rent.");
+                return;
+            }
+
+            if (!vehicle.IsAvailable)
+            {
+                outputPort.NotFoundHandle($"Vehicle '{input.VehicleId}' is not available for rent.");
                 return;
             }
 
