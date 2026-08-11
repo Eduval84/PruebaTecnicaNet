@@ -371,6 +371,26 @@ Cómo explicarlo:
 - "Este test prueba el flujo completo de aplicación contra la infraestructura en memoria sin levantar HTTP."
 - "La disponibilidad se valida como comportamiento observable de negocio, no como detalle interno del repositorio."
 
+### 8. Test funcional del ciclo devolución y disponibilidad
+
+Objetivo:
+- Validar el ciclo completo Create -> Rent -> Return -> ListAvailable para comprobar que un vehículo vuelve a estar disponible tras la devolución.
+
+Decisión técnica:
+- Crear datos únicos por ejecución (customer/vehicle) para evitar acoplamiento entre tests del mismo fixture compartido.
+- Verificar una precondición de negocio: tras alquilar, el vehículo no aparece en el listado de disponibles.
+- Ejecutar devolución y validar postcondición: el mismo vehículo vuelve a aparecer en disponibles.
+
+Archivos relevantes:
+- `test/functional/GtMotive.Estimate.Microservice.FunctionalTests/Specs/ReturnVehicleAvailabilityFunctionalTests.cs`
+
+Resultado:
+- Test funcional en verde confirmando que la devolución restituye la disponibilidad observable del vehículo.
+
+Cómo explicarlo:
+- "Aquí demuestro comportamiento de negocio de extremo a extremo dentro de aplicación+infraestructura sin host web."
+- "No valido estados internos de objetos, valido resultado funcional observable en el listado disponible."
+
 Qué mostrar:
 - `IVehicleRepository` con `ListAvailable()`.
 - `ListAvailableVehiclesInput`.
