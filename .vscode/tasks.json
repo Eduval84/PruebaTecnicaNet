@@ -1,0 +1,29 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build-host",
+      "type": "shell",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "src/GtMotive.Estimate.Microservice.Host/GtMotive.Estimate.Microservice.Host.csproj",
+        "--nologo"
+      ],
+      "group": "build",
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "test-sln",
+      "type": "shell",
+      "command": "dotnet",
+      "args": [
+        "test",
+        "src/microservice.sln",
+        "--nologo"
+      ],
+      "group": "test",
+      "problemMatcher": "$msCompile"
+    }
+  ]
+}

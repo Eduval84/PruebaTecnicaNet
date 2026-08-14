@@ -1,0 +1,30 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Host (Development)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-host",
+      "program": "${workspaceFolder}/src/GtMotive.Estimate.Microservice.Host/bin/Debug/net9.0/GtMotive.Estimate.Microservice.Host.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/GtMotive.Estimate.Microservice.Host",
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://localhost:5080",
+        "Security__EnableAuth": "false"
+      },
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "Now listening on:\\s+(https?://\\S+)",
+        "uriFormat": "%s/swagger"
+      }
+    },
+    {
+      "name": "Attach to .NET Process",
+      "type": "coreclr",
+      "request": "attach"
+    }
+  ]
+}
